@@ -1,0 +1,26 @@
+{
+    "name": "vue-schemas",
+    "version": "1.0.0",
+    "description": "Dynamic schemas and forms builder",
+    "main": "./src/index.js",
+    "scripts": {
+        "lint": "eslint src"
+    },    
+    "files": [
+        "src"
+    ],
+    "dependencies": {
+        "axios": "^0.19.2",
+        "element-ui": "^2.13.0",
+        "vrudex": "file:.yalc/vrudex",
+        "vue": "^2.6.11",
+        "vue-router": "^3.1.5",
+        "vuex": "^3.1.2",
+        "file-saver": "^2.0.2"
+    },
+    "devDependencies": {
+        "babel-eslint": "10.0.3",
+        "eslint": "6.8.0",
+        "eslint-plugin-vue": "6.1.2"
+    }
+}
