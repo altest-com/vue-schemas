@@ -1,6 +1,6 @@
 {
     "name": "vue-schemas",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "Dynamic schemas and forms builder",
     "main": "./src/index.js",
     "scripts": {
@@ -12,7 +12,7 @@
     "dependencies": {
         "axios": "^0.19.2",
         "element-ui": "^2.13.0",
-        "vrudex": "file:.yalc/vrudex",
+        "vrudex": "^1.0.0",
         "vue": "^2.6.11",
         "vue-router": "^3.1.5",
         "vuex": "^3.1.2",
