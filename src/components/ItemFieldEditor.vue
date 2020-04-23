@@ -40,6 +40,20 @@
                     @change="val => onParamChange({multi: val})"
                 ></el-switch>
             </el-form-item>
+
+            <el-form-item label="Mostrar como">
+                <el-select
+                    :value="field.config.displayAs"
+                    @change="val => onConfigChange({displayAs: val})"
+                >
+                    <el-option
+                        v-for="option in displayChoices"
+                        :key="option.value"
+                        :label="option.label"
+                        :value="option.value"
+                    ></el-option>
+                </el-select>
+            </el-form-item>
         </el-form>
     </template>
 </field-editor>
@@ -51,6 +65,14 @@
 import QuerySelect from './QuerySelect';
 import FieldEditor from './FieldEditor';
 import FieldEditorMixin from './FieldEditorMixin';
+import { itemConfigModel } from '../store/item-fields/models';
+
+const displayChoices = Object.keys(
+    itemConfigModel.DISPLAY_CHOICES
+).map(key => ({
+    label: itemConfigModel.DISPLAY_CHOICES[key],
+    value: key
+}));
 
 export default {
     name: 'ItemFieldEditor',
@@ -64,7 +86,8 @@ export default {
 
     data() {
         return {
-            fieldStore: 'itemFields'
+            fieldStore: 'itemFields',
+            displayChoices: displayChoices
         };
     },
 
@@ -73,7 +96,7 @@ export default {
             return !!this.field.targetSchema || this.field.targetSchema === 0; 
         },
         params() {
-            return this.hasRelated ? {schema_pk: this.field.targetSchema} : {};
+            return this.hasRelated ? {schema_id: this.field.targetSchema} : {};
         }
     },
 

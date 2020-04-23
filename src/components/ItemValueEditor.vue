@@ -1,7 +1,7 @@
 <template>
 
 <div v-if="value && field" class="item-value-editor">
-    <el-form-item :label="field.name">
+    <el-form-item v-if="!editNested" :label="field.name">
         <query-select
             :multiple="field.multi"
             :disabled="!hasRelated"
@@ -11,6 +11,13 @@
             @change="val => onParamChange({value: val})"
         ></query-select>        
     </el-form-item>
+    <template v-else>
+        <item-editor
+            v-for="itemId in value.value"
+            :key="itemId"  
+            :item-id="itemId"
+        ></item-editor>
+    </template>
 </div>
 
 </template>
@@ -24,7 +31,8 @@ export default {
     name: 'ItemValueEditor',
 
     components: {
-        QuerySelect
+        QuerySelect,
+        ItemEditor: () => import('./ItemEditor')
     },
 
     mixins: [ValueEditorMixin],
@@ -41,7 +49,70 @@ export default {
             return !!this.field.targetSchema || this.field.targetSchema === 0; 
         },
         params() {
-            return this.hasRelated ? {schema_pk: this.field.targetSchema} : {};
+            return this.hasRelated ? {schema_id: this.field.targetSchema} : {};
+        },
+        editNested() {
+            return (
+                this.hasRelated && 
+                this.field.targetSchema !== this.field.schema && 
+                this.field.config.displayAs === 'nest'
+            );
+        }
+    },
+
+    created() {
+        this.createTarget().catch(() => {
+            console.log('Error creating target item');
+        });
+    },
+
+    methods: {
+        async createTarget() {
+            const state = this.$store.state.schemas;
+            let value = state.itemValues.items[this.valueId];
+            if (!value) {
+                try {
+                    value = await this.$store.dispatch(
+                        'schemas/itemValues/retrieveItem', this.valueId
+                    );
+                } catch (error) {
+                    console.log('Error retrieving item value');
+                    return;
+                }
+            }
+
+            if (value.value.length) {
+                return;
+            }
+                
+            let field = state.itemFields.items[value.field];
+
+            if (!field) {
+                try {
+                    field = await this.$store.dispatch(
+                        'schemas/itemFields/retrieveItem', value.field
+                    );
+                } catch (error) {
+                    console.log('Error retrieving item value field');
+                    return;
+                }
+            }
+
+            if (field.config.displayAs === 'nest' &
+                (!!field.targetSchema || 
+                field.targetSchema === 0) &&  
+                field.targetSchema !== field.schema
+            ) {
+                this.$store.dispatch('schemas/items/createItem', {
+                    item: {schema: field.targetSchema},
+                    persist: true
+                }).then(({ id }) => {
+                    this.$store.dispatch(`schemas/itemValues/updateItem`, {
+                        persist: true,
+                        item: {id: this.valueId, value: [id]}
+                    });
+                });
+            }
         }
     }
 };

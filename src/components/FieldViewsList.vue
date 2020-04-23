@@ -5,13 +5,14 @@
     label-position="top" 
     size="small" 
     class="field-views-list"
+    :class="{'focusable': focus}"
 >
     <div
         v-for="(field, index) in fields" 
         :key="field.type + field.id"
-        class="field-wrapper flex-row as"
-        :class="{'focus': (field.type + field.id) === focusId}"
-        @click.stop="$emit('update:focus-id', field.type + field.id)"
+        class="field-wrapper"
+        :class="{'focus': (field.type + field.id) === focusKey}"
+        @click.stop="onFieldClick(field.type + field.id)"
     >
         <div class="selector"></div>
         <boolean-field-view 
@@ -102,9 +103,9 @@ export default {
             type: Array,
             default: () => []
         },
-        focusId: {
-            type: [String, Number],
-            default: null
+        focus: {
+            type: Boolean,
+            default: true
         }
     },
 
@@ -114,6 +115,9 @@ export default {
     },
 
     computed: {
+        focusKey() {
+            return this.$store.state.schemas.itemSchemas.fieldKey;
+        }
     },
 
     methods: {
@@ -151,6 +155,11 @@ export default {
                 });
                 this.onUpdateField(field, { order: order });
             }
+        },
+        onFieldClick(key) {
+            if (this.focus) {
+                this.$store.dispatch('schemas/itemSchemas/setField', key);
+            }
         }
     }    
 };
@@ -158,57 +167,66 @@ export default {
 
 <style lang="scss">
 
-.field-views-list {
+.field-views-list{
     .field-wrapper {
-        position: relative;
-        padding-right: 24px;
-        .field-content {
-            flex-grow: 1;
-        }
-        &:hover {
-            cursor: pointer;
-        }
-        .selector {
+        .selector, .order-control {
             display: none;
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 8px;
-            height: 100%;
-                        
         }
-        .order-control {
+    }
+    &.focusable {
+        >.field-wrapper {
             display: flex;
-            flex-flow: column nowrap;
-            align-items: center;
-            justify-content: center;
-            margin-left: 42px;
-            visibility: hidden;
-            .el-button {
-                padding: 2px;
-                margin: 0;
-                border: none;
-                font-size: 18px;
-                line-height: 12px;
-                i {
-                    line-height: 0;
+            flex-flow: row nowrap;
+            align-items: flex-start;
+            position: relative;
+            padding-right: 24px;
+            >.field-content {
+                flex-grow: 1;
+            }
+            &:hover {
+                cursor: pointer;
+            }
+            >.selector {
+                display: none;
+                position: absolute;
+                top: 0;
+                right: 0;
+                width: 8px;
+                height: 100%;                            
+            }
+            >.order-control {
+                display: flex;
+                flex-flow: column nowrap;
+                align-items: center;
+                justify-content: center;
+                margin-left: 42px;
+                visibility: hidden;
+                .el-button {
+                    padding: 2px;
+                    margin: 0;
+                    border: none;
+                    font-size: 18px;
+                    line-height: 12px;
+                    i {
+                        line-height: 0;
+                    }
                 }
             }
-        }
-        &:hover {
-            .selector {
-                display: block;
-                background-color:#f5f7fa;
-            }
-        } 
-        &.focus {
-            .selector {
-                display: block;
-                border-right: 1px dashed #909399;
-                background-color: #ecf5ff;
-            }
-            .order-control {
-                visibility: visible;
+            &:hover {
+                .selector {
+                    display: block;
+                    background-color:#f5f7fa;
+                }
+            } 
+            &.focus {
+                >.selector {
+                    display: block;
+                    border-right: 1px dashed #909399;
+                    background-color: #ecf5ff;
+                }
+                >.order-control {
+                    visibility: visible;
+                }
             }
         }
     }

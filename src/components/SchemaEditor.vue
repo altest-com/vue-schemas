@@ -17,57 +17,11 @@
             </el-button>
         </div>        
         <el-card shadow="never" class="mx-3">
-            <div class="px-3" @click.stop="onSchemaClick">
-                <template v-if="sections.length">
-                    <el-tabs 
-                        v-if="config.sectionsType === 'tabs'"
-                        v-model="curSection"
-                        :tab-position="config.tabsPosition"
-                        class="mt-3"
-                    >
-                        <el-tab-pane 
-                            v-for="section in sections"
-                            :key="section.id"
-                            :label="section.name" 
-                            :name="section.id"
-                        >
-                            <field-views-list
-                                class="mt-3"
-                                :fields="sectionFields[section.id]"
-                                :focus-id="curFieldId"
-                                @update:focus-id="onCurFieldChange"
-                            ></field-views-list>
-                        </el-tab-pane>
-                    </el-tabs>
-
-                    <el-collapse 
-                        v-if="config.sectionsType === 'accordion'"
-                        v-model="curSection"
-                        class="mt-3"
-                        accordion
-                    >
-                        <el-collapse-item 
-                            v-for="section in sections"
-                            :key="section.id"
-                            :title="section.name" 
-                            :name="section.id"
-                        >
-                            <field-views-list
-                                class="mt-3"
-                                :fields="sectionFields[section.id]"
-                                :focus-id="curFieldId"
-                                @update:focus-id="onCurFieldChange"
-                            ></field-views-list>
-                        </el-collapse-item>
-                    </el-collapse>
-                </template>
-
-                <field-views-list
-                    v-else
-                    :fields="sortedFields"
-                    :focus-id.sync="curFieldId"
-                ></field-views-list>
-            </div>
+            <schema-fields-view 
+                :schema-id="schemaId"
+                :fields="sortedFields"
+                :section.sync="section"
+            ></schema-fields-view>
         </el-card>
         <el-dialog
             title="Advertencia"
@@ -167,7 +121,8 @@
                     </el-form>
                 </el-tab-pane>
                 <el-tab-pane label="Secciones" name="sections">
-                    <schema-sections :schema-id="schemaId"></schema-sections>
+                    <schema-sections :schema-id="schemaId">
+                    </schema-sections>
                 </el-tab-pane>
             </el-tabs>
             
@@ -229,7 +184,7 @@ import TextFieldEditor from './TextFieldEditor';
 import ImageUploader from './ImageUploader';
 import SchemaAddField from './SchemaAddField';
 import SchemaSections from './SchemaSections';
-import FieldViewsList from './FieldViewsList';
+import SchemaFieldsView from './SchemaFieldsView';
 import params from '../params';
 
 export default {
@@ -250,7 +205,7 @@ export default {
         ImageUploader,
         SchemaAddField,
         SchemaSections,
-        FieldViewsList
+        SchemaFieldsView
     },
 
     props: {
@@ -262,17 +217,22 @@ export default {
 
     data() {
         return {
-            panel: 'schema',
-            curFieldId: null,
             routeFrom: {},
             showDeleteDialog: false,
             editorTab: 'schema',
-            curSection_: '',
+            section: undefined,
             loading: false
         };
     },
 
     computed: {
+        panel() {
+            return this.curFieldId ? 'field' : 'schema';
+        },
+
+        curFieldId() {
+            return this.$store.state.schemas.itemSchemas.fieldKey;
+        },
 
         itemSchema() {
             this.$store.dispatch('schemas/itemSchemas/getItem', this.schemaId);
@@ -286,22 +246,6 @@ export default {
 
         config() {
             return this.itemSchema.config;
-        },
-
-        curSection: {
-            get() {
-                if (!this.curSection_ && this.config.sections.length) {
-                    return this.config.sections[0].id;
-                }
-                return this.curSection_;
-            },
-            set(val) {
-                this.curSection_ = val;
-            }
-        },
-
-        sections() {
-            return this.itemSchema ? this.itemSchema.config.sections : [];
         },
 
         fields() {
@@ -325,22 +269,6 @@ export default {
             );
         },
 
-        sectionFields() {
-            const fields = {};
-            if (this.sections.length) {
-                const sectionId_ = this.sections[0].id;
-                this.sortedFields.forEach(field => {
-                    const sectionId = field.config.section || sectionId_;
-                    if (fields[sectionId]) {
-                        fields[sectionId].push(field);
-                    } else {
-                        fields[sectionId] = [field];
-                    }
-                });
-            }
-            return fields;
-        },
-
         curField() {
             return this.curFieldId ? this.fields[this.curFieldId] : null;
         }
@@ -354,19 +282,18 @@ export default {
 
     methods: {
 
-        onCurFieldChange(fieldId) {
-            this.panel = fieldId === null ? 'schema' : 'field';
-            this.curFieldId = fieldId;
+        setCurFieldKey(key) {
+            this.$store.dispatch('schemas/itemSchemas/setField', key);
         },
 
-        onSchemaClick(f) {
-            this.panel = 'schema';
-            this.curFieldId = null;
+        onSchemaClick() {
+            /* this.panel = 'schema'; */
+            this.setCurFieldKey(null);
         },
 
         onCloseFieldEditor() {
-            this.curFieldId = null;
-            this.panel = 'schema';
+            this.setCurFieldKey(null);
+            /* this.panel = 'schema'; */
         },
 
         onAddField(fieldType) {    
@@ -383,6 +310,9 @@ export default {
                 const field = param.fieldModel.create();                    
                 field.itemSchema = this.schemaId;
                 field.order = order;
+                if (this.section) {
+                    field.config.section = this.section;
+                }
                 this.$store.dispatch(`schemas/${param.fieldStore}/createItem`, {
                     item: field, 
                     persist: true
@@ -441,17 +371,15 @@ export default {
         onDeleteField() {
             if (this.curField) {
                 const param = params[this.curField.type];
-                this.panel = 'schema';
-                if (param) {
+                const fieldId = this.curField.id;
+                this.setCurFieldKey(null);
+                this.$store.dispatch(
+                    `schemas/${param.fieldStore}/destroyItem`, fieldId
+                ).then(() => {                    
                     this.$store.dispatch(
-                        `schemas/${param.fieldStore}/destroyItem`, this.curField.id
-                    ).then(() => {
-                        this.curFieldId = null;
-                        this.$store.dispatch(
-                            'schemas/itemSchemas/retrieveItem', this.schemaId
-                        );
-                    });
-                }
+                        'schemas/itemSchemas/retrieveItem', this.schemaId
+                    );
+                });
             }
         },
 

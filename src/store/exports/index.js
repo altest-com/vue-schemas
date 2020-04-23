@@ -25,7 +25,6 @@ const actions = {
         return new Promise((resolve, reject) => {
             exportApi.download(params).then((response) => {
                 const fileNameHeader = 'filename';
-                console.log(JSON.stringify(response));
                 let fileName = response.headers[fileNameHeader];
                 if (!fileName) {
                     const date = new Date().toISOString().slice(0, 16);

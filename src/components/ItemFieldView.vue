@@ -1,7 +1,7 @@
 <template>
 
 <div v-if="field" class="item-field-view">
-    <el-form-item :label="field.name">
+    <el-form-item v-if="!editNested" :label="field.name">
         <query-select
             :multiple="field.multi"
             :disabled="!hasRelated"
@@ -10,6 +10,8 @@
             :value="field.default"
         ></query-select>                
     </el-form-item>
+    <item-schema-view v-else :schema-id="field.targetSchema">
+    </item-schema-view>
 </div>
 
 </template>
@@ -23,7 +25,8 @@ export default {
     name: 'ItemFieldView',
 
     components: {
-        QuerySelect
+        QuerySelect,
+        ItemSchemaView: () => import('./ItemSchemaView')
     },
 
     mixins: [FieldViewMixin],
@@ -39,7 +42,14 @@ export default {
             return !!this.field.targetSchema || this.field.targetSchema === 0; 
         },
         params() {
-            return this.hasRelated ? {schema_pk: this.field.targetSchema} : {};
+            return this.hasRelated ? {schema_id: this.field.targetSchema} : {};
+        },
+        editNested() {
+            return (
+                this.hasRelated && 
+                this.field.targetSchema !== this.field.schema && 
+                this.field.config.displayAs === 'nest'
+            );
         }
     }
 };

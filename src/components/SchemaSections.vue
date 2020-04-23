@@ -139,7 +139,7 @@ export default {
         onRemoveSection(id) {
             this.onParamChange({
                 sections: this.config.sections.filter(
-                    section => section.id_ !== id
+                    section => section.id !== id
                 )
             });
         },

@@ -21,14 +21,23 @@ const state = {
     orderBy: 'name',
     pageSize: PAGE_SIZE,
     loading: false,
-    getting: {}
+    getting: {},
+    fieldKey: null
 };
+
+const SET_FIELD = (state, key) => {
+    state.fieldKey = key;   
+};
+
+function setField(context, key) {
+    context.commit('SET_FIELD', key);
+}
 
 export default {
     namespaced: true,
     state,
-    actions,
-    mutations,
+    actions: {...actions, setField},
+    mutations: {...mutations, SET_FIELD},
     getters
 };
 

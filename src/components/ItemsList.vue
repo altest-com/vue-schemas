@@ -207,7 +207,7 @@ export default {
         },
         updateList: function() {
             this.$store.dispatch('schemas/items/fetchItems', {
-                schema_pk: this.schemaId
+                schema_id: this.schemaId
             });
         },
         onRowClick(itemId) {
