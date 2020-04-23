@@ -1,4 +1,5 @@
 export default { 
     axios: null,
-    apiPath: ''
+    apiPath: '',
+    buildNavTree: true
 };

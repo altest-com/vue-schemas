@@ -37,7 +37,12 @@
             </el-select>
         </el-form-item>
 
-        <el-form-item label="Añadir sección">
+        <ab-editable-list 
+            :value="config.sections"
+            @input="val => onParamChange({sections: val})"
+        ></ab-editable-list>
+
+        <!-- <el-form-item label="Añadir sección">
             <div class="flex-row jb">
                 <el-input
                     v-model="newSection"
@@ -69,7 +74,7 @@
                     ></el-button>
                 </div>
             </div>           
-        </el-form-item>
+        </el-form-item> -->
     </el-form>
 </div>
 
@@ -77,6 +82,7 @@
 
 <script>
 
+import AbEditableList from './AbEditableList';
 import { configModel } from '../store/item-schemas/models';
 
 const sectionTypes = Object.keys(
@@ -97,6 +103,10 @@ const randId = () => Math.random().toString(36).substr(2, 9);
 
 export default {
     name: 'SchemaSections',
+
+    components: {
+        AbEditableList
+    },
 
     props: {
         schemaId: {

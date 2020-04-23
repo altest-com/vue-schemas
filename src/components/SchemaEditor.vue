@@ -186,6 +186,7 @@ import SchemaAddField from './SchemaAddField';
 import SchemaSections from './SchemaSections';
 import SchemaFieldsView from './SchemaFieldsView';
 import params from '../params';
+import config from '../config';
 
 export default {
     name: 'SchemaEditor',
@@ -365,7 +366,9 @@ export default {
         },
 
         updateRoutes() {
-            this.$store.dispatch('schemas/navbar/buildRoutes');
+            if (config.buildNavTree) {
+                this.$store.dispatch('schemas/navigation/buildRoutes');
+            }            
         },
 
         onDeleteField() {

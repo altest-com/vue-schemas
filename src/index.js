@@ -2,8 +2,7 @@
 import config from './config';
 
 const install = (Vue, options = {}) => {
-    config.axios = options.axios;
-    config.apiPath = options.apiPath;
+    Object.assign(config, options);
 
     const components = require('./components');
     const store = require('./store').default;

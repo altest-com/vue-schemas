@@ -78,7 +78,7 @@ export default {
 
     data() {
         return {
-            curSection_: ''
+            curSection_: undefined
         };
     },
 
@@ -101,7 +101,10 @@ export default {
 
         curSection: {
             get() {
-                if (!this.curSection_ && this.config.sections.length) {
+                if (
+                    this.curSection_ === undefined && 
+                    this.config.sections.length
+                ) {
                     return this.config.sections[0].id;
                 }
                 return this.curSection_;
