@@ -411,13 +411,6 @@ export default {
     .field-views-list {
         max-width: 500px;
     }
-    .el-collapse-item__header {
-        font-size: 16px;
-        font-weight: 700;
-    }
-    .el-tabs--left .el-tabs__content {
-        padding-left: 24px;
-    }
 }
 
 </style>

@@ -1,68 +1,36 @@
 <template>
 
-<div v-if="schema" class="item-schema-view">
-    <template v-if="config.sections.length">
-        <el-tabs 
-            v-if="config.sectionsType === 'tabs'"
-            v-model="curSection"
-            :tab-position="config.tabsPosition"
+<sections-layout v-if="schema" :schema-id="schema.id">
+    <template v-slot:section="{ sectionId }">
+        <field-views-list
             class="mt-3"
-        >
-            <el-tab-pane 
-                v-for="section in config.sections"
-                :key="section.id"
-                :label="section.name" 
-                :name="section.id"
-            >
-                <field-views-list
-                    class="mt-3"
-                    :fields="sectionFields[section.id]"
-                    :focus="false"
-                ></field-views-list>
-            </el-tab-pane>
-        </el-tabs>
-
-        <el-collapse 
-            v-if="config.sectionsType === 'accordion'"
-            v-model="curSection"
-            class="mt-3"
-            accordion
-        >
-            <el-collapse-item 
-                v-for="section in config.sections"
-                :key="section.id"
-                :title="section.name" 
-                :name="section.id"
-            >
-                <field-views-list
-                    class="mt-3"
-                    :fields="sectionFields[section.id]"
-                    :focus="false"
-                ></field-views-list>
-            </el-collapse-item>
-        </el-collapse>
+            :fields="sectionFields[sectionId]"
+            :focus="false"
+        ></field-views-list>
     </template>
-
-    <field-views-list
-        v-else
-        class="mt-3"
-        :fields="sortedFields"
-        :focus="false"
-    ></field-views-list>
-</div>
+    <template v-slot:fields>
+        <field-views-list
+            class="mt-3"
+            :fields="sortedFields"
+            :focus="false"
+        ></field-views-list>
+    </template>
+</sections-layout>
 
 </template>
 
 <script>
 
 import FieldViewsList from './FieldViewsList';
+import SectionsLayout from './SectionsLayout';
 import params from '../params';
 
 export default {
     name: 'ItemSchemaView',
 
     components: {
-        FieldViewsList
+        FieldViewsList,
+        SectionsLayout
     },
     
     props: {
@@ -74,7 +42,6 @@ export default {
 
     data() {
         return {
-            curSection_: undefined
         };
     },
 
@@ -89,7 +56,6 @@ export default {
         config() {
             return this.schema.config;
         },
-
         fields() {
             const fields = {};
             Object.keys(params).forEach(key => {
@@ -125,18 +91,6 @@ export default {
                 });
             }
             return fields;
-        },
-
-        curSection: {
-            get() {
-                if (this.curSection_ === undefined && this.config.sections.length) {
-                    return this.config.sections[0].id;                  
-                }
-                return this.curSection_;
-            },
-            set(val) {
-                this.curSection_ = val;
-            }
         }
     }
 };

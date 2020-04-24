@@ -1,64 +1,38 @@
 <template>
 
-<div v-if="schema" class="schema-fields-view">
-    <template v-if="config.sections.length">
-        <el-tabs 
-            v-if="config.sectionsType === 'tabs'"
-            v-model="curSection"
-            :tab-position="config.tabsPosition"
+<sections-layout
+    v-if="schema"
+    :schema-id="schemaId" 
+    :section="section"
+    @update:section="val => $emit('update:section', val)"
+>
+    <template v-slot:section="{ sectionId }">
+        <field-views-list
             class="mt-3"
-        >
-            <el-tab-pane 
-                v-for="section in config.sections"
-                :key="section.id"
-                :label="section.name" 
-                :name="section.id"
-            >
-                <field-views-list
-                    class="mt-3"
-                    :fields="sectionFields[section.id]"
-                ></field-views-list>
-            </el-tab-pane>
-        </el-tabs>
-
-        <el-collapse 
-            v-if="config.sectionsType === 'accordion'"
-            v-model="curSection"
-            class="mt-3"
-            accordion
-        >
-            <el-collapse-item 
-                v-for="section in config.sections"
-                :key="section.id"
-                :title="section.name" 
-                :name="section.id"
-            >
-                <field-views-list
-                    class="mt-3"
-                    :fields="sectionFields[section.id]"
-                ></field-views-list>
-            </el-collapse-item>
-        </el-collapse>
+            :fields="sectionFields[sectionId]"
+        ></field-views-list>
     </template>
-
-    <field-views-list
-        v-else
-        class="mt-3"
-        :fields="fields"
-    ></field-views-list>
-</div>
+    <template v-slot:fields>
+        <field-views-list
+            class="mt-3"
+            :fields="fields"
+        ></field-views-list>
+    </template>
+</sections-layout>
 
 </template>
 
 <script>
 
 import FieldViewsList from './FieldViewsList';
+import SectionsLayout from './SectionsLayout';
 
 export default {
     name: 'SchemaFieldsView',
 
     components: {
-        FieldViewsList
+        FieldViewsList,
+        SectionsLayout
     },
     
     props: {
@@ -78,7 +52,6 @@ export default {
 
     data() {
         return {
-            curSection_: undefined
         };
     },
 
@@ -107,19 +80,6 @@ export default {
                 });
             }
             return fields;
-        },
-        curSection: {
-            get() {
-                if (this.section === undefined && this.config.sections.length) {
-                    const val = this.config.sections[0].id;
-                    this.$emit('update:section', val);
-                    return val;                    
-                }
-                return this.section;
-            },
-            set(val) {
-                this.$emit('update:section', val);
-            }
         }
     }
 };

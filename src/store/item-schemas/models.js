@@ -3,6 +3,8 @@ import { Model } from 'vrudex';
 class ConfigModel extends Model {
     SECTIONS_TABS = 'tabs'
     SECTIONS_ACCORDION = 'accordion'
+    SECTIONS_BLOCKS = 'blocks'
+    SECTIONS_STEPS = 'steps'
 
     TAB_POSITION_TOP = 'top'
     TAB_POSITION_RIGHT = 'right'
@@ -11,7 +13,9 @@ class ConfigModel extends Model {
 
     SECTIONS_CHOICES = {
         [this.SECTIONS_TABS]: 'Pestañas',
-        [this.SECTIONS_ACCORDION]: 'Acordeón'
+        [this.SECTIONS_ACCORDION]: 'Acordeón',
+        [this.SECTIONS_BLOCKS]: 'Bloques',
+        [this.SECTIONS_STEPS]: 'Secuencia'
     }
 
     TABS_POSITION_CHOICES = {

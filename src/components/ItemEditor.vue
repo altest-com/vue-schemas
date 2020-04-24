@@ -1,55 +1,20 @@
 <template>
 
-<div v-if="item && schema" class="items-editor">
-    <template v-if="config.sections.length">
-        <el-tabs 
-            v-if="config.sectionsType === 'tabs'"
-            v-model="curSection"
-            :tab-position="config.tabsPosition"
+<sections-layout v-if="item && schema" :schema-id="schema.id">
+    <template v-slot:section="{ sectionId }">
+        <items-value-editors
             class="mt-3"
-        >
-            <el-tab-pane 
-                v-for="section in config.sections"
-                :key="section.id"
-                :label="section.name" 
-                :name="section.id"
-            >
-                <items-value-editors
-                    class="mt-3"
-                    :values="sectionValues[section.id]"
-                    :style="{maxWidth: formWidth}"
-                ></items-value-editors>
-            </el-tab-pane>
-        </el-tabs>
-
-        <el-collapse 
-            v-if="config.sectionsType === 'accordion'"
-            v-model="curSection"
-            class="mt-3"
-            accordion
-        >
-            <el-collapse-item 
-                v-for="section in config.sections"
-                :key="section.id"
-                :title="section.name" 
-                :name="section.id"
-            >
-                <items-value-editors
-                    class="mt-3"
-                    :values="sectionValues[section.id]"
-                    :style="{maxWidth: formWidth}"
-                ></items-value-editors>
-            </el-collapse-item>
-        </el-collapse>
+            :values="sectionValues[sectionId]"
+            :style="{maxWidth: formWidth}"
+        ></items-value-editors>
     </template>
-
-    <items-value-editors
-        v-else
-        :values="sortedValues"
-        :style="{maxWidth: formWidth}"
-    ></items-value-editors>
-    
-</div>
+    <template v-slot:fields>
+        <items-value-editors
+            :values="sortedValues"
+            :style="{maxWidth: formWidth}"
+        ></items-value-editors>
+    </template>
+</sections-layout>
 
 </template>
 
@@ -57,12 +22,14 @@
 
 import params from '../params';
 import ItemsValueEditors from './ItemsValueEditors';
+import SectionsLayout from './SectionsLayout';
 
 export default {
     name: 'ItemEditor',
 
     components: {
-        ItemsValueEditors
+        ItemsValueEditors,
+        SectionsLayout
     },
 
     props: {
@@ -78,7 +45,6 @@ export default {
 
     data() {
         return {
-            curSection_: undefined
         };
     },
 
@@ -97,21 +63,6 @@ export default {
 
         config() {
             return this.schema.config;
-        },
-
-        curSection: {
-            get() {
-                if (
-                    this.curSection_ === undefined && 
-                    this.config.sections.length
-                ) {
-                    return this.config.sections[0].id;
-                }
-                return this.curSection_;
-            },
-            set(val) {
-                this.curSection_ = val;
-            }
         },
 
         values() {
@@ -172,15 +123,4 @@ export default {
 </script>}
 
 <style lang="scss">
-
-.items-editor {
-    .el-collapse-item__header {
-        font-size: 16px;
-        font-weight: 700;
-    }
-    .el-tabs--left .el-tabs__content {
-        padding-left: 24px;
-    }
-}
-
 </style>

@@ -41,40 +41,6 @@
             :value="config.sections"
             @input="val => onParamChange({sections: val})"
         ></ab-editable-list>
-
-        <!-- <el-form-item label="Añadir sección">
-            <div class="flex-row jb">
-                <el-input
-                    v-model="newSection"
-                    placeholder="Opción"                    
-                ></el-input>
-                <el-button
-                    :disabled="!newSection"
-                    type="primary" 
-                    icon="el-icon-plus"
-                    class="ml-2"
-                    @click="onAddSection"
-                ></el-button>
-            </div>                
-        </el-form-item>
-
-        <el-form-item label="Secciones">
-            <div class="sections-list mt-2">
-                <div 
-                    v-for="section in config.sections" 
-                    :key="section.id"
-                    class="section-item flex-row jb ac"
-                >
-                    <span>{{ section.name }}</span>
-                    <el-button 
-                        type="text" 
-                        icon="el-icon-close" 
-                        size="small"
-                        @click="onRemoveSection(section.id)"
-                    ></el-button>
-                </div>
-            </div>           
-        </el-form-item> -->
     </el-form>
 </div>
 
@@ -98,8 +64,6 @@ const tabsPositions = Object.keys(
     label: configModel.TABS_POSITION_CHOICES[key],
     value: key
 }));
-
-const randId = () => Math.random().toString(36).substr(2, 9);
 
 export default {
     name: 'SchemaSections',
@@ -134,25 +98,6 @@ export default {
     },
 
     methods: {
-        onAddSection() {
-            if (this.newSection) {
-                this.onParamChange({
-                    sections: [
-                        ...this.config.sections, {
-                            id: randId(),
-                            name: this.newSection
-                        }
-                    ]
-                });
-            }
-        },
-        onRemoveSection(id) {
-            this.onParamChange({
-                sections: this.config.sections.filter(
-                    section => section.id !== id
-                )
-            });
-        },
         onParamChange(data) {
             this.$store.dispatch('schemas/itemSchemas/updateItem', {
                 persist: false,
@@ -167,29 +112,4 @@ export default {
 </script>
 
 <style lang="scss">
-
-.schema-sections {
-    .section-item {
-        width: 100%;
-        font-size: 14px;
-        padding: 0px 8px;
-        border-bottom: 1px solid #ebeef5;
-        &:first-child {
-            border-top: 1px solid #ebeef5;
-        }
-        .el-button {
-            border: none;
-            padding: 0px;
-            opacity: 0;
-        } 
-        &:hover {
-            background-color: #f5f7fa;
-            .el-button {
-                opacity: 1;
-            }
-        } 
-      
-    }
-}
-
 </style>
