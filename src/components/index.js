@@ -38,7 +38,7 @@ import TextValueEditor from './TextValueEditor';
 
 import ItemEditor from './ItemEditor';
 import ItemsIndex from './ItemsIndex';
-import ItemsList from './ItemsList';
+import ItemsListWrapper from './ItemsListWrapper';
 import ItemsValueEditors from './ItemsValueEditors';
 
 import SchemaAddField from './SchemaAddField';
@@ -93,7 +93,7 @@ export {
     TextValueEditor,
     ItemEditor,
     ItemsIndex,
-    ItemsList,
+    ItemsListWrapper,
     ItemsValueEditors,
     SchemaAddField,
     SchemaEditor,

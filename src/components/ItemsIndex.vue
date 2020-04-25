@@ -10,12 +10,12 @@
             @create="onCreateItem"
         ></list-header>
 
-        <items-list
+        <items-list-wrapper
             :schema-id="schemaId"
             :columns="visibleCols"
             :focus-id="curItemId"
             @update:focus-id="onItemListChange"
-        ></items-list>
+        ></items-list-wrapper>
 
         <el-dialog
             title="Advertencia"
@@ -152,7 +152,7 @@ import { itemModel } from '../store/items/models';
 import SplitView from './SplitView';
 import ToolButton from './ToolButton';
 import ListHeader from './ListHeader';
-import ItemsList from './ItemsList';
+import ItemsListWrapper from './ItemsListWrapper';
 /* import ItemDetails from './ItemDetails';
 import ItemsFilter from './ItemsFilter'; */
 import ItemEditor from './ItemEditor';
@@ -167,7 +167,7 @@ export default {
         SplitView,
         ToolButton,
         ListHeader,
-        ItemsList,
+        ItemsListWrapper,
         /* ItemsFilter, */
         /* ItemDetails, */
         ItemEditor

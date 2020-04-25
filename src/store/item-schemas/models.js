@@ -11,6 +11,9 @@ class ConfigModel extends Model {
     TAB_POSITION_BOTTOM = 'bottom'
     TAB_POSITION_LEFT = 'left'
 
+    LAYOUT_COL = 'col'
+    LAYOUT_ROW = 'row'
+
     SECTIONS_CHOICES = {
         [this.SECTIONS_TABS]: 'Pestañas',
         [this.SECTIONS_ACCORDION]: 'Acordeón',
@@ -23,6 +26,11 @@ class ConfigModel extends Model {
         [this.TAB_POSITION_RIGHT]: 'Derecha',
         [this.TAB_POSITION_BOTTOM]: 'Inferior',
         [this.TAB_POSITION_LEFT]: 'Izquierda'
+    }
+
+    LAYOUT_CHOICES = {
+        [this.LAYOUT_COL]: 'Vertical',
+        [this.LAYOUT_ROW]: 'Horizontal'
     }
 
     props = {
@@ -54,6 +62,14 @@ class ConfigModel extends Model {
             api: 'init_section',
             type: String,
             default: '',
+            fill: true
+        },
+        layout: {
+            writable: true,
+            api: 'layout',
+            type: String,
+            choices: Object.keys(this.LAYOUT_CHOICES),
+            default: this.LAYOUT_COL,
             fill: true
         }
     }

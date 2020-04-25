@@ -12,11 +12,20 @@
         ></query-select>        
     </el-form-item>
     <template v-else>
+        <el-button
+            v-if="field.multi"           
+            round
+            small
+            icon="el-icon-plus"
+            @click="onAddItem"
+        >
+            Nuevo
+        </el-button>
         <item-editor
             v-for="itemId in value.value"
-            :key="itemId"  
+            :key="itemId"
             :item-id="itemId"
-        ></item-editor>
+        ></item-editor>   
     </template>
 </div>
 
@@ -67,6 +76,17 @@ export default {
     },
 
     methods: {
+        onAddItem() {
+            this.$store.dispatch('schemas/items/createItem', {
+                item: {schema: this.field.targetSchema},
+                persist: true
+            }).then(({ id }) => {
+                this.$store.dispatch(`schemas/itemValues/updateItem`, {
+                    persist: true,
+                    item: {id: this.valueId, value: [...this.value, id]}
+                });
+            });
+        },
         async createTarget() {
             const state = this.$store.state.schemas;
             let value = state.itemValues.items[this.valueId];
@@ -101,7 +121,8 @@ export default {
             if (field.config.displayAs === 'nest' &
                 (!!field.targetSchema || 
                 field.targetSchema === 0) &&  
-                field.targetSchema !== field.schema
+                field.targetSchema !== field.schema &&
+                !field.multi
             ) {
                 this.$store.dispatch('schemas/items/createItem', {
                     item: {schema: field.targetSchema},

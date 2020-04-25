@@ -1,24 +1,25 @@
 <template>
 
-<td 
-    v-if="value" 
-    class="number-value-cell" 
-    :style="{'max-width': '64px'}"
->
-    <div class="cell">{{ display }}</div>
-</td>
+<div v-if="value && field" class="number-value-row">
+    <div v-if="showLabel" class="label">{{ field.name }}</div>
+    <div class="value">{{ display }}</div>
+</div>
 
 </template>
 
 <script>
 
 export default {
-    name: 'NumberValueCell',
+    name: 'NumberValueRow',
     
     props: {
         valueId: {
             type: [Number, String],
             required: true
+        },
+        showLabel: {
+            type: Boolean,
+            default: true
         }
     },
 

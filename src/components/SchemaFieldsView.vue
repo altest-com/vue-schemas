@@ -9,12 +9,14 @@
     <template v-slot:section="{ sectionId }">
         <field-views-list
             class="mt-3"
+            :layout="config.layout"
             :fields="sectionFields[sectionId]"
         ></field-views-list>
     </template>
     <template v-slot:fields>
         <field-views-list
             class="mt-3"
+            :layout="config.layout"
             :fields="fields"
         ></field-views-list>
     </template>

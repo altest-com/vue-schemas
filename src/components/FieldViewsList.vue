@@ -5,7 +5,11 @@
     label-position="top" 
     size="small" 
     class="field-views-list"
-    :class="{'focusable': focus}"
+    :class="{
+        'focusable': focus,
+        'row': layout === 'row',
+        'col': layout === 'col'
+    }"
 >
     <div
         v-for="(field, index) in fields" 
@@ -14,7 +18,6 @@
         :class="{'focus': (field.type + field.id) === focusKey}"
         @click.stop="onFieldClick(field.type + field.id)"
     >
-        <div class="selector"></div>
         <boolean-field-view 
             v-if="field.type === 'boolean'"
             class="field-content"
@@ -55,18 +58,14 @@
             class="field-content"
             :field-id="field.id"
         ></text-field-view>
-        <div class="order-control">
-            <el-button
-                class="pb-0"
-                icon="el-icon-caret-top"
-                @click="onFieldUp(index)"
-            ></el-button>
-            <el-button
-                class="pt-0"
-                icon="el-icon-caret-bottom"
-                @click="onFieldDown(index)"
-            ></el-button>
-        </div>            
+        <div class="selector" v-if="focus"></div>
+        <div class="order-control pl-3">
+            <ab-order-buttons
+                v-if="focus"
+                @up="onFieldUp(index)"
+                @down="onFieldDown(index)"
+            ></ab-order-buttons> 
+        </div>          
     </div>
 </el-form>
 
@@ -74,6 +73,7 @@
 
 <script>
 
+import AbOrderButtons from './AbOrderButtons';
 import BooleanFieldView from './BooleanFieldView';
 import ChoicesFieldView from './ChoicesFieldView';
 import DateFieldView from './DateFieldView';
@@ -88,6 +88,7 @@ export default {
     name: 'FieldViewsList',
 
     components: {
+        AbOrderButtons,
         BooleanFieldView,
         ChoicesFieldView,
         DateFieldView,
@@ -106,6 +107,10 @@ export default {
         focus: {
             type: Boolean,
             default: true
+        },
+        layout: {
+            type: String,
+            default: 'col'
         }
     },
 
@@ -173,18 +178,20 @@ export default {
             display: none;
         }
     }
-    &.focusable {
+    &.row {
+        display: flex;
+        flex-flow: row nowrap;
+        align-self: center;
+    }
+    &.col.focusable {
         >.field-wrapper {
             display: flex;
             flex-flow: row nowrap;
             align-items: flex-start;
             position: relative;
-            padding-right: 24px;
+            padding-right: 20px;
             >.field-content {
                 flex-grow: 1;
-            }
-            &:hover {
-                cursor: pointer;
             }
             >.selector {
                 display: none;
@@ -195,24 +202,11 @@ export default {
                 height: 100%;                            
             }
             >.order-control {
-                display: flex;
-                flex-flow: column nowrap;
-                align-items: center;
-                justify-content: center;
-                margin-left: 42px;
+                display: block;
                 visibility: hidden;
-                .el-button {
-                    padding: 2px;
-                    margin: 0;
-                    border: none;
-                    font-size: 18px;
-                    line-height: 12px;
-                    i {
-                        line-height: 0;
-                    }
-                }
             }
             &:hover {
+                cursor: pointer;
                 .selector {
                     display: block;
                     background-color:#f5f7fa;
@@ -224,6 +218,32 @@ export default {
                     border-right: 1px dashed #909399;
                     background-color: #ecf5ff;
                 }
+                >.order-control {
+                    visibility: visible;
+                }
+            }
+        }
+    }
+    &.row.focusable {
+        >.field-wrapper {
+            position: relative;
+            border: 2px solid transparent;
+            border-radius: 4px;
+            >.selector {
+                display: none;                          
+            }
+            >.order-control {
+                visibility: hidden;
+                position: absolute;
+                top: 0;
+                right: 0;
+            }
+            &:hover {
+                cursor: pointer;
+                border-color: #f5f7fa;
+            } 
+            &.focus {
+                border-color: #ecf5ff;
                 >.order-control {
                     visibility: visible;
                 }

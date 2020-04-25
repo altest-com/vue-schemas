@@ -107,7 +107,7 @@ import TextValueCell from './TextValueCell';
 const nColumnsShow = 4;
 
 export default {
-    name: 'ItemsList',
+    name: 'ItemsListWrapper',
 
     components: {
         Empty,

@@ -10,14 +10,35 @@
             :value="field.default"
         ></query-select>                
     </el-form-item>
-    <item-schema-view v-else :schema-id="field.targetSchema">
-    </item-schema-view>
+    <template v-else>
+        <template v-if="field.multi">
+            <el-button         
+                round
+                small
+                icon="el-icon-plus"
+                @click="onAddItem"
+            >
+                Nuevo
+            </el-button>
+            <empty
+                :title="field.name"
+                :message="`Aún no se añadido ningún ${field.name}`"
+                icon-size="3em"
+                height="200px"
+                icon="el-icon-tickets"
+                background="#eee"
+            ></empty>
+        </template>
+        <item-schema-view v-else :schema-id="field.targetSchema">
+        </item-schema-view>
+    </template>
 </div>
 
 </template>
 
 <script>
 
+import Empty from './Empty';
 import QuerySelect from './QuerySelect';
 import FieldViewMixin from './FieldViewMixin';
 
@@ -26,6 +47,7 @@ export default {
 
     components: {
         QuerySelect,
+        Empty,
         ItemSchemaView: () => import('./ItemSchemaView')
     },
 

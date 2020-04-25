@@ -1,24 +1,29 @@
 <template>
 
-<td 
-    v-if="value" 
-    class="choices-value-cell" 
-    :style="{'max-width': '100px'}"
->
-    <div class="cell">{{ display }}</div>
-</td>
+<div v-if="value && field" class="choices-value-row">
+    <div v-if="showLabel" class="label">{{ field.name }}</div>
+    <div class="value">{{ display }}</div>
+</div>
 
 </template>
 
 <script>
 
 export default {
-    name: 'ChoicesValueCell',
+    name: 'ChoicesValueRow',
     
     props: {
         valueId: {
             type: [Number, String],
             required: true
+        },
+        showLabel: {
+            type: Boolean,
+            default: true
+        },
+        layout: {
+            type: String,
+            default: 'vertical'
         }
     },
 
