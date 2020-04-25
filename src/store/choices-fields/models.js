@@ -13,7 +13,7 @@ class ChoicesConfigModel extends ConfigModel {
     DISPLAY_CHOICES = {
         [this.DISPLAY_SELECT]: 'Lista',
         [this.DISPLAY_BUTTONS]: 'Botones',
-        [this.DISPLAY_CHECK]: 'Radio'
+        [this.DISPLAY_CHECK]: 'Checkboxes'
     }
 
     props = Object.assign({}, configModel.props, {
