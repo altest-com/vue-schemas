@@ -63,6 +63,23 @@
                     ></el-option>
                 </el-select>
             </el-form-item>
+
+            <el-form-item 
+                v-if="field.config.displayAs === 'check'"
+                label="Distribución"
+            >
+                <el-select
+                    :value="field.config.layout"
+                    @change="val => onConfigChange({layout: val})"
+                >
+                    <el-option
+                        v-for="option in layoutChoices"
+                        :key="option.value"
+                        :label="option.label"
+                        :value="option.value"
+                    ></el-option>
+                </el-select>
+            </el-form-item>
         </el-form>
     </template>
 </field-editor>
@@ -82,6 +99,13 @@ const displayChoices = Object.keys(
     value: key
 }));
 
+const layoutChoices = Object.keys(
+    choicesConfigModel.LAYOUT_CHOICES
+).map(key => ({
+    label: choicesConfigModel.LAYOUT_CHOICES[key],
+    value: key
+}));
+
 export default {
     name: 'ChoicesFieldEditor',
 
@@ -94,6 +118,7 @@ export default {
     data() {
         return {
             displayChoices: displayChoices,
+            layoutChoices: layoutChoices,
             addChoice: '',
             fieldStore: 'choicesFields'
         };

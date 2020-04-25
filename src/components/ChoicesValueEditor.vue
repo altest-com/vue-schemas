@@ -1,6 +1,6 @@
 <template>
 
-<div v-if="value && field" class="choices-value-editor">
+<div v-if="value && field" class="choices-value-editor" :class="classes">
     <el-form-item :label="field.name">
         <div v-if="choices.length">
             <el-select
@@ -80,6 +80,11 @@ export default {
                 }
             });
             return choices;
+        },
+        classes() {
+            return {
+                'vertical': this.field.config.layout === 'vertical'
+            };
         }
     }
 };
@@ -94,6 +99,11 @@ export default {
         padding-left: 12px;
         color: #9b9b9b;
         font-weight: 600;
+    }
+    &.vertical {
+        .el-checkbox {
+            width: 100%;
+        }
     }
 }
 

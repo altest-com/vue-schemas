@@ -16,6 +16,14 @@ class ChoicesConfigModel extends ConfigModel {
         [this.DISPLAY_CHECK]: 'Checkboxes'
     }
 
+    LAYOUT_FLOW = 'flow'
+    LAYOUT_VERTICAL = 'vertical'
+
+    LAYOUT_CHOICES = {
+        [this.LAYOUT_FLOW]: 'Fluida',
+        [this.LAYOUT_VERTICAL]: 'Vertical'
+    }
+
     props = Object.assign({}, configModel.props, {
         multi: {
             writable: true,
@@ -31,6 +39,14 @@ class ChoicesConfigModel extends ConfigModel {
             fill: true,
             default: this.DISPLAY_SELECT,
             choices: Object.keys(this.DISPLAY_CHOICES)
+        },
+        layout: {
+            writable: true,
+            api: 'layout',
+            type: String,
+            fill: true,
+            default: this.LAYOUT_FLOW,
+            choices: Object.keys(this.LAYOUT_CHOICES)
         }
     })
 }
