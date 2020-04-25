@@ -20,6 +20,21 @@
             </el-select>
         </el-form-item>
 
+        <el-form-item label="Sección por defecto">
+            <el-select
+                clearable
+                :value="config.initSection"
+                @change="val => onParamChange({initSection: val})"
+            >
+                <el-option
+                    v-for="option in config.sections"
+                    :key="option.id"
+                    :label="option.name"
+                    :value="option.id"
+                ></el-option>
+            </el-select>
+        </el-form-item>
+
         <el-form-item 
             v-if="config.sectionsType === 'tabs'" 
             label="Ubicación de las pestañas"

@@ -48,6 +48,13 @@ class ConfigModel extends Model {
             choices: Object.keys(this.TABS_POSITION_CHOICES),
             default: this.TAB_POSITION_TOP,
             fill: true
+        },
+        initSection: {
+            writable: true,
+            api: 'init_section',
+            type: String,
+            default: '',
+            fill: true
         }
     }
 }

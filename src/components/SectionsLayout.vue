@@ -106,8 +106,12 @@ export default {
         },
         curSection: {
             get() {
-                if (this.section === undefined && this.config.sections.length) {
-                    const val = this.config.sections[0].id;
+                if (
+                    this.section === undefined && 
+                    this.config.sections.length && 
+                    this.config.initSection
+                ) {
+                    const val = this.config.initSection;
                     this.$emit('update:section', val);
                     return val;                    
                 }
