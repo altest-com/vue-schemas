@@ -51,21 +51,20 @@
 
 <script>
 
+import FieldViewMixin from './FieldViewMixin';
+
 export default {
     name: 'ChoicesFieldView',
+
+    mixins: [FieldViewMixin],
     
-    props: {
-        fieldId: {
-            type: [Number, String],
-            required: true
-        }
+    data() {
+        return {
+            fieldStore: 'choicesFields'
+        };
     },
 
     computed: {
-        field() {
-            this.$store.dispatch('schemas/choicesFields/getItem', this.fieldId);
-            return this.$store.state.schemas.choicesFields.items[this.fieldId];            
-        },
         choices() {
             const choices = [];
             this.field.choices.forEach(choiceId => {

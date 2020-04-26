@@ -34,21 +34,17 @@
 
 <script>
 
+import FieldViewMixin from './FieldViewMixin';
+
 export default {
     name: 'BooleanFieldView',
-    
-    props: {
-        fieldId: {
-            type: [Number, String],
-            required: true
-        }
-    },
 
-    computed: {
-        field() {
-            this.$store.dispatch('schemas/booleanFields/getItem', this.fieldId);
-            return this.$store.state.schemas.booleanFields.items[this.fieldId];          
-        }
+    mixins: [FieldViewMixin],
+    
+    data() {
+        return {
+            fieldStore: 'booleanFields'
+        };
     }
 };
 </script>

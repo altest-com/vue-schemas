@@ -19,21 +19,17 @@
 
 <script>
 
+import FieldViewMixin from './FieldViewMixin';
+
 export default {
     name: 'DateFieldView',
-    
-    props: {
-        fieldId: {
-            type: [Number, String],
-            required: true
-        }
-    },
 
-    computed: {
-        field() {
-            this.$store.dispatch('schemas/dateTimeFields/getItem', this.fieldId);
-            return this.$store.state.schemas.dateTimeFields.items[this.fieldId];         
-        }
+    mixins: [FieldViewMixin],
+    
+    data() {
+        return {
+            fieldStore: 'dateTimeFields'
+        };
     }
 };
 </script>
