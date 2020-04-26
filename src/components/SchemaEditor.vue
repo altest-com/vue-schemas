@@ -118,20 +118,6 @@
                                 })"
                             ></image-uploader>
                         </el-form-item>
-
-                        <el-form-item label="Distribución de los campos">
-                            <el-select
-                                :value="config.layout"
-                                @change="val => onConfigChange({layout: val})"
-                            >
-                                <el-option
-                                    v-for="option in layoutChoices"
-                                    :key="option.value"
-                                    :label="option.label"
-                                    :value="option.value"
-                                ></el-option>
-                            </el-select>
-                        </el-form-item>
                     </el-form>
                 </el-tab-pane>
                 <el-tab-pane label="Secciones" name="sections">
@@ -201,14 +187,6 @@ import SchemaSections from './SchemaSections';
 import SchemaFieldsView from './SchemaFieldsView';
 import params from '../params';
 import config from '../config';
-import { configModel } from '../store/item-schemas/models';
-
-const layoutChoices = Object.keys(
-    configModel.LAYOUT_CHOICES
-).map(key => ({
-    label: configModel.LAYOUT_CHOICES[key],
-    value: key
-}));
 
 export default {
     name: 'SchemaEditor',
@@ -244,8 +222,7 @@ export default {
             showDeleteDialog: false,
             editorTab: 'schema',
             section: undefined,
-            loading: false,
-            layoutChoices: layoutChoices
+            loading: false
         };
     },
 
@@ -355,10 +332,6 @@ export default {
                 persist: false,
                 item: {id: this.schemaId, ...data}
             });
-        },
-
-        onConfigChange(data) {
-            this.onParamChange({config: {...this.config, ...data}});
         },
 
         onSaveChanges() {

@@ -1,7 +1,7 @@
 <template>
 
 <div v-if="value && field" class="text-value-editor">        
-    <el-form-item :label="field.name">
+    <el-form-item :label="label">
         <el-input
             :type="field.config.rows > 1 ? 'textarea' : 'text'"
             :value="value.value"

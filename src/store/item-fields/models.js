@@ -9,9 +9,17 @@ class ItemConfigModel extends ConfigModel {
     DISPLAY_SELECT = 'select'
     DISPLAY_NEST = 'nest'
 
+    LIST_STEPS = 'steps'
+    LIST_BLOCKS = 'blocks'
+
     DISPLAY_CHOICES = {
         [this.DISPLAY_SELECT]: 'Selección',
         [this.DISPLAY_NEST]: 'Editor anidado'
+    }
+
+    LIST_CHOICES = {
+        [this.LIST_STEPS]: 'Secuencia',
+        [this.LIST_BLOCKS]: 'Bloques'
     }
 
     props = Object.assign({}, configModel.props, {
@@ -22,6 +30,14 @@ class ItemConfigModel extends ConfigModel {
             fill: true,
             default: this.DISPLAY_SELECT,
             choices: Object.keys(this.DISPLAY_CHOICES)
+        },
+        listAs: {
+            writable: true,
+            api: 'list_as',
+            type: String,
+            fill: true,
+            default: this.LIST_STEPS,
+            choices: Object.keys(this.LIST_CHOICES)
         }
     })
 }

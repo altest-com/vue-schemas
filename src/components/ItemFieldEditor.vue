@@ -54,6 +54,23 @@
                     ></el-option>
                 </el-select>
             </el-form-item>
+
+            <el-form-item 
+                v-if="field.multi && field.config.displayAs === 'nest'" 
+                label="Listar objetos como"
+            >
+                <el-select
+                    :value="field.config.listAs"
+                    @change="val => onConfigChange({listAs: val})"
+                >
+                    <el-option
+                        v-for="option in listChoices"
+                        :key="option.value"
+                        :label="option.label"
+                        :value="option.value"
+                    ></el-option>
+                </el-select>
+            </el-form-item>
         </el-form>
     </template>
 </field-editor>
@@ -65,12 +82,19 @@
 import QuerySelect from './QuerySelect';
 import FieldEditor from './FieldEditor';
 import FieldEditorMixin from './FieldEditorMixin';
-import { itemConfigModel } from '../store/item-fields/models';
+import { itemConfigModel as config } from '../store/item-fields/models';
 
 const displayChoices = Object.keys(
-    itemConfigModel.DISPLAY_CHOICES
+    config.DISPLAY_CHOICES
 ).map(key => ({
-    label: itemConfigModel.DISPLAY_CHOICES[key],
+    label: config.DISPLAY_CHOICES[key],
+    value: key
+}));
+
+const listChoices = Object.keys(
+    config.LIST_CHOICES
+).map(key => ({
+    label: config.LIST_CHOICES[key],
     value: key
 }));
 
@@ -87,7 +111,8 @@ export default {
     data() {
         return {
             fieldStore: 'itemFields',
-            displayChoices: displayChoices
+            displayChoices: displayChoices,
+            listChoices: listChoices
         };
     },
 

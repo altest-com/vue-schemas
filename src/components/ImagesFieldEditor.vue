@@ -36,6 +36,41 @@
                     </el-radio-button>
                 </el-radio-group>
             </el-form-item>
+
+            <el-form-item label="Altura de las imágenes">
+                <el-input
+                    :value="field.config.height"                    
+                    @input="val => onConfigChange({height: val})"                    
+                ></el-input>
+            </el-form-item>
+
+            <el-form-item label="Mostrar imágenes como">
+                <el-select
+                    :value="field.config.displayAs"
+                    @change="val => onConfigChange({displayAs: val})"
+                >
+                    <el-option
+                        v-for="option in displayChoices"
+                        :key="option.value"
+                        :label="option.label"
+                        :value="option.value"
+                    ></el-option>
+                </el-select>
+            </el-form-item>
+
+            <el-form-item label="Tipo de control">
+                <el-select
+                    :value="field.config.buttonType"
+                    @change="val => onConfigChange({buttonType: val})"
+                >
+                    <el-option
+                        v-for="option in buttonChoices"
+                        :key="option.value"
+                        :label="option.label"
+                        :value="option.value"
+                    ></el-option>
+                </el-select>
+            </el-form-item>
         </el-form>
     </template>
 </field-editor>
@@ -44,9 +79,24 @@
 
 <script>
 
+import { imageConfigModel as config } from '../store/images-fields/models';
 import ImageUploader from './ImageUploader';
 import FieldEditor from './FieldEditor';
 import FieldEditorMixin from './FieldEditorMixin';
+
+const displayChoices = Object.keys(
+    config.DISPLAY_CHOICES
+).map(key => ({
+    label: config.DISPLAY_CHOICES[key],
+    value: key
+}));
+
+const buttonChoices = Object.keys(
+    config.BUTTON_CHOICES
+).map(key => ({
+    label: config.BUTTON_CHOICES[key],
+    value: key
+}));
 
 export default {
     name: 'ImagesFieldEditor',
@@ -60,7 +110,9 @@ export default {
 
     data() {
         return {
-            fieldStore: 'imagesFields'
+            fieldStore: 'imagesFields',
+            displayChoices: displayChoices,
+            buttonChoices: buttonChoices
         };
     }
 };

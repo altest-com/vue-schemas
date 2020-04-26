@@ -1,7 +1,7 @@
 <template>
 
 <div v-if="field" class="number-field-view">
-    <el-form-item :label="field.name">
+    <el-form-item :label="label">
         <el-input-number
             v-if="field.config.displayAs === 'input'"
             :value="field.default"                   

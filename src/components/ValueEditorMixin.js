@@ -16,6 +16,9 @@ export default {
             const fieldId = this.value.field;
             this.$store.dispatch(`schemas/${this.fieldStore}/getItem`, fieldId);
             return this.$store.state.schemas[this.fieldStore].items[fieldId];        
+        },
+        label() {
+            return this.field.config.showLabel ? this.field.name : '';
         }
     },
 

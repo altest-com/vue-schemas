@@ -10,6 +10,7 @@
         v-for="value in values" 
         :key="value.type + value.id"
         class="field-wrapper"
+        :style="{width: value.width}"
     >
         <boolean-value-editor
             v-if="value.type === 'boolean'"
@@ -94,4 +95,12 @@ export default {
 </script>
 
 <style lang="scss">
+
+.items-value-editors {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
 </style>

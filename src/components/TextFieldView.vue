@@ -1,7 +1,7 @@
 <template>
 
 <div class="text-field-view">
-    <el-form-item :label="field.name">
+    <el-form-item :label="label">
         <el-input
             :type="field.config.rows > 1 ? 'textarea' : 'text'"
             :value="field.default"

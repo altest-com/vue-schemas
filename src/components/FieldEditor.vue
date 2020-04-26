@@ -29,7 +29,7 @@
                                 No
                             </el-radio-button>
                         </el-radio-group>
-                        </el-form-item>
+                    </el-form-item>
 
                     <el-form-item label="Orden">
                         <el-input-number 
@@ -62,6 +62,20 @@
                             :value="section.id"
                         ></el-option>
                     </el-select>
+                </el-form-item>
+
+                <el-form-item label="Mostrar nombre del campo" class="switch">
+                    <el-switch
+                        :value="field.config.showLabel"                    
+                        @change="val => onConfigChange({showLabel: val})"
+                    ></el-switch>
+                </el-form-item>
+
+                <el-form-item label="Ancho">
+                    <el-input
+                        :value="field.config.width"
+                        @input="val => onConfigChange({width: val})"
+                    ></el-input>
                 </el-form-item>
             </el-form>
         </el-tab-pane>

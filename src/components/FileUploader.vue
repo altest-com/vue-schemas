@@ -32,6 +32,8 @@
     >
         <el-button 
             size="small"
+            plain
+            type="primary"
             icon="el-icon-upload"
             class="block"
         >

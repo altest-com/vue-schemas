@@ -84,7 +84,8 @@ export default {
                                 id: value.id,
                                 type: value.type,
                                 order: value.order,
-                                field: field
+                                section: field.config.section,
+                                width: field.config.width
                             };
                         }                        
                     }
@@ -104,8 +105,7 @@ export default {
             if (this.config.sections.length) {
                 const sectionId_ = this.config.sections[0].id;
                 this.sortedValues.forEach(value => {
-                    const field = value.field;
-                    const sectionId = field.config.section || sectionId_;
+                    const sectionId = value.section || sectionId_;
                     if (values[sectionId]) {
                         values[sectionId].push(value);
                     } else {

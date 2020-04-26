@@ -1,7 +1,7 @@
 <template>
 
 <div v-if="field" class="date-field-view">
-    <el-form-item :label="field.name">
+    <el-form-item :label="label">
         <el-time-picker
             v-if="field.config.dataType === 'time'"
             arrow-control

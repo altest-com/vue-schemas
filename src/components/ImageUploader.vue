@@ -28,13 +28,25 @@
                     :height="height"
                     width="100%"
                 >
-                    <el-button
-                        icon="el-icon-delete" 
-                        type="text"
-                        @click="onRemoveImage(image.id)"
-                    >
-                        Eliminar
-                    </el-button>
+                    <div class="actions flex-row ac jc">
+                        <el-button
+                            icon="el-icon-delete"
+                            size="small"
+                            type="text"
+                            class="mr-3"
+                            @click="onRemoveImage(image.id)"
+                        >
+                            Eliminar
+                        </el-button>
+                        <el-button
+                            icon="el-icon-view" 
+                            size="small"
+                            type="text"
+                            @click="onPreviewImage(image.url)"
+                        >
+                            Ampliar
+                        </el-button>
+                    </div>
                 </image-overlay>
             </el-carousel-item>
         </el-carousel>
@@ -45,13 +57,25 @@
             :height="height"
             width="100%"
         >
-            <el-button
-                icon="el-icon-delete" 
-                type="text"
-                @click="onRemoveImage(images[0].id)"
-            >
-                Eliminar
-            </el-button>
+            <div class="actions flex-row ac jc">
+                <el-button
+                    icon="el-icon-delete"
+                    size="small"
+                    type="text"
+                    class="mr-3"
+                    @click="onRemoveImage(images[0].id)"
+                >
+                    Eliminar
+                </el-button>
+                <el-button
+                    icon="el-icon-view" 
+                    size="small"
+                    type="text"
+                    @click="onPreviewImage(images[0].url)"
+                >
+                    Ampliar
+                </el-button>
+            </div>
         </image-overlay>
     </template>
 
@@ -98,7 +122,9 @@
         </template>
 
         <el-button 
-            v-else-if="button === 'block'" 
+            v-else-if="button === 'block'"
+            plain
+            type="primary"
             size="small"
             icon="el-icon-upload"
         >
@@ -268,7 +294,6 @@ export default {
 <style lang="scss">
 
 .image-uploader {
-    margin-bottom: 12px;
     .image-overlay img {
         height: 100%;
         width: 100%;
@@ -307,6 +332,11 @@ export default {
             &:hover {
                 cursor: pointer;
             }
+        }
+    }
+    .actions {
+        >.el-button {
+            color: #fff;
         }
     }
 }

@@ -1,7 +1,7 @@
 <template>
 
 <div v-if="value && field" class="file-value-editor">  
-    <el-form-item :label="field.name"> 
+    <el-form-item :label="label"> 
         <file-uploader
             store="schemas/files"
             :multiple="field.multi"

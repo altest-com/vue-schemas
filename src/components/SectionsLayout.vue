@@ -44,12 +44,13 @@
         </div>
 
         <ab-step-views 
-            v-if="config.sectionsType === 'steps'" 
+            v-if="config.sectionsType === 'steps'"
+            v-model="step"
             class="mt-3"
             size="small"
             :nsteps="config.sections.length"
         >
-            <template v-slot:view="{ step }">
+            <template>
                 <el-divider content-position="left" class="section-label">
                     {{ config.sections[step].name }}
                 </el-divider>
@@ -89,7 +90,7 @@ export default {
 
     data() {
         return {
-            curSection_: undefined
+            step: 0
         };
     },
 

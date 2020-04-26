@@ -40,14 +40,14 @@
 
 <script>
 
-import { booleanConfigModel } from '../store/boolean-fields/models';
+import { booleanConfigModel as config } from '../store/boolean-fields/models';
 import FieldEditor from './FieldEditor';
 import FieldEditorMixin from './FieldEditorMixin';
 
 const displayChoices = Object.keys(
-    booleanConfigModel.DISPLAY_CHOICES
+    config.DISPLAY_CHOICES
 ).map(key => ({
-    label: booleanConfigModel.DISPLAY_CHOICES[key],
+    label: config.DISPLAY_CHOICES[key],
     value: key
 }));
 

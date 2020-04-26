@@ -1,7 +1,7 @@
 <template>
 
 <div v-if="value && field" class="item-value-editor">
-    <el-form-item v-if="!editNested" :label="field.name">
+    <el-form-item v-if="!editNested" :label="label">
         <query-select
             :multiple="field.multi"
             :disabled="!hasRelated"
@@ -12,20 +12,66 @@
         ></query-select>        
     </el-form-item>
     <template v-else>
-        <el-button
-            v-if="field.multi"           
-            round
-            small
-            icon="el-icon-plus"
-            @click="onAddItem"
-        >
-            Nuevo
-        </el-button>
-        <item-editor
-            v-for="itemId in value.value"
-            :key="itemId"
-            :item-id="itemId"
-        ></item-editor>   
+        <label v-if="label" class="el-form-item__label">{{ label }}</label>
+        <template v-if="field.multi">
+            <div class="flex-row ac">
+                <el-button
+                    round
+                    type="primary"
+                    size="small"
+                    class="block mb-4 mr-2"
+                    icon="el-icon-plus"
+                    @click="onAddItem"
+                >
+                    Añadir {{ field.name }}
+                </el-button>
+                <el-button
+                    round
+                    :disabled="!value.value.length"
+                    size="small"
+                    class="block mb-4"
+                    icon="el-icon-delete"
+                    @click="onDelItem"
+                >
+                    Eliminar {{ field.name }}
+                </el-button>
+            </div>
+
+            <template v-if="value.value.length">
+                <ab-step-views 
+                    v-if="field.config.listAs === 'steps'"
+                    v-model="step"
+                    size="small"
+                    :nsteps="value.value.length"
+                >
+                    <item-editor :item-id="value.value[step]">
+                    </item-editor>
+                </ab-step-views>
+                <template v-if="field.config.listAs === 'blocks'">
+                    <item-editor
+                        v-for="itemId in value.value"
+                        :key="itemId"
+                        :item-id="itemId"
+                    ></item-editor>
+                </template>
+            </template>
+            <empty
+                v-else
+                :title="field.name"
+                message="Aún no se han añadido ningún elemento"
+                icon-size="2.5em"
+                height="200px"
+                icon="el-icon-warning-outline"
+                background="#eee"
+            ></empty>            
+        </template>
+        <template v-else>
+            <item-editor
+                v-for="itemId in value.value"
+                :key="itemId"
+                :item-id="itemId"
+            ></item-editor>
+        </template> 
     </template>
 </div>
 
@@ -35,12 +81,16 @@
 
 import QuerySelect from './QuerySelect';
 import ValueEditorMixin from './ValueEditorMixin';
+import AbStepViews from './AbStepViews';
+import Empty from './Empty';
 
 export default {
     name: 'ItemValueEditor',
 
     components: {
         QuerySelect,
+        Empty,
+        AbStepViews,
         ItemEditor: () => import('./ItemEditor')
     },
 
@@ -49,7 +99,8 @@ export default {
     data() {
         return {
             fieldStore: 'itemFields',
-            valueStore: 'itemValues'
+            valueStore: 'itemValues',
+            step: 0
         };
     },
 
@@ -83,9 +134,27 @@ export default {
             }).then(({ id }) => {
                 this.$store.dispatch(`schemas/itemValues/updateItem`, {
                     persist: true,
-                    item: {id: this.valueId, value: [...this.value, id]}
+                    item: {id: this.valueId, value: [...this.value.value, id]}
+                }).then(() => {
+                    this.step = this.value.value.length - 1;
                 });
             });
+        },
+        onDelItem() {
+            if (this.step >= 0 && this.step < this.value.value.length) {
+                const itemId = this.value.value[this.step];
+                this.step = Math.max(this.step - 1, 0);
+
+                this.$store.dispatch(`schemas/itemValues/updateItem`, {
+                    persist: true,
+                    item: {
+                        id: this.valueId, 
+                        value: this.value.value.filter(val => val !== itemId)                            
+                    }
+                }).then(() => {
+                    this.$store.dispatch('schemas/items/destroyItem', itemId);
+                });               
+            }
         },
         async createTarget() {
             const state = this.$store.state.schemas;

@@ -7,6 +7,20 @@ class ConfigModel extends Model {
             api: 'section',
             type: String,
             fill: true
+        },
+        showLabel: {
+            writable: true,
+            api: 'show_label',
+            type: Boolean,
+            default: true,
+            fill: true
+        },
+        width: {
+            writable: true,
+            api: 'width',
+            type: String,
+            default: '100%',
+            fill: true
         }
     }
 }

@@ -5,17 +5,14 @@
     label-position="top" 
     size="small" 
     class="field-views-list"
-    :class="{
-        'focusable': focus,
-        'row': layout === 'row',
-        'col': layout === 'col'
-    }"
+    :class="{'focusable': focus}"
 >
     <div
         v-for="(field, index) in fields" 
         :key="field.type + field.id"
         class="field-wrapper"
-        :class="{'focus': (field.type + field.id) === focusKey}"
+        :style="{width: field.config.width}"
+        :class="{'focus': focus && (field.type + field.id) === focusKey}"
         @click.stop="onFieldClick(field.type + field.id)"
     >
         <boolean-field-view 
@@ -58,8 +55,7 @@
             class="field-content"
             :field-id="field.id"
         ></text-field-view>
-        <div class="selector" v-if="focus"></div>
-        <div class="order-control pl-3">
+        <div class="order-control">
             <ab-order-buttons
                 v-if="focus"
                 @up="onFieldUp(index)"
@@ -107,10 +103,6 @@ export default {
         focus: {
             type: Boolean,
             default: true
-        },
-        layout: {
-            type: String,
-            default: 'col'
         }
     },
 
@@ -173,70 +165,31 @@ export default {
 <style lang="scss">
 
 .field-views-list{
-    .field-wrapper {
-        .selector, .order-control {
-            display: none;
-        }
+    display: flex;
+    flex-flow: row wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    order-control {
+        display: none;
     }
-    &.row {
-        display: flex;
-        flex-flow: row nowrap;
-        align-self: center;
-    }
-    &.col.focusable {
-        >.field-wrapper {
-            display: flex;
-            flex-flow: row nowrap;
-            align-items: flex-start;
-            position: relative;
-            padding-right: 20px;
-            >.field-content {
-                flex-grow: 1;
-            }
-            >.selector {
-                display: none;
-                position: absolute;
-                top: 0;
-                right: 0;
-                width: 8px;
-                height: 100%;                            
-            }
-            >.order-control {
-                display: block;
-                visibility: hidden;
-            }
-            &:hover {
-                cursor: pointer;
-                .selector {
-                    display: block;
-                    background-color:#f5f7fa;
-                }
-            } 
-            &.focus {
-                >.selector {
-                    display: block;
-                    border-right: 1px dashed #909399;
-                    background-color: #ecf5ff;
-                }
-                >.order-control {
-                    visibility: visible;
-                }
-            }
-        }
-    }
-    &.row.focusable {
+
+    &.focusable {
         >.field-wrapper {
             position: relative;
             border: 2px solid transparent;
             border-radius: 4px;
-            >.selector {
-                display: none;                          
-            }
+            padding-left: 4px;
+            padding-right: 4px;
             >.order-control {
+                display: block;
                 visibility: hidden;
                 position: absolute;
                 top: 0;
                 right: 0;
+                padding: 6px;
+                border-radius: 4px;
+                background-color: #fff;
+                z-index: 10;
             }
             &:hover {
                 cursor: pointer;

@@ -7,12 +7,6 @@ class ItemModel extends Model {
             api: 'id',
             type: Number
         },
-        name: {
-            writable: true,
-            api: 'name',
-            type: String,
-            default: 'Nuevo Objeto'
-        },
         schema: {
             writable: true,
             api: 'schema',

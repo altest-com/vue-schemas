@@ -1,12 +1,13 @@
 <template>
 
 <div v-if="value && field" class="images-value-editor">
-    <el-form-item :label="field.name"> 
+    <el-form-item :label="label"> 
         <image-uploader
             store="schemas/images"
             :multiple="field.multi"
-            button="drag"
-            display="carousel"
+            :height="field.config.height"
+            :button="field.config.buttonType"
+            :display="field.config.displayAs"
             :value="value.value"
             @input="val => onParamChange({value: val})"
         ></image-uploader>

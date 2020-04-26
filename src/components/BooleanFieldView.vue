@@ -2,7 +2,7 @@
 
 <div v-if="field" class="boolean-field-view">
     <el-form-item 
-        :label="field.name" 
+        :label="label"
         :class="{'switch': field.config.displayAs === 'switch'}"
     >
         <el-switch

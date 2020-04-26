@@ -1,7 +1,7 @@
 <template>
 
 <div v-if="field" class="item-field-view">
-    <el-form-item v-if="!editNested" :label="field.name">
+    <el-form-item v-if="!editNested" :label="label">
         <query-select
             :multiple="field.multi"
             :disabled="!hasRelated"
@@ -11,21 +11,34 @@
         ></query-select>                
     </el-form-item>
     <template v-else>
+        <label v-if="label" class="el-form-item__label">{{ label }}</label>
         <template v-if="field.multi">
-            <el-button         
-                round
-                small
-                icon="el-icon-plus"
-                @click="onAddItem"
-            >
-                Nuevo
-            </el-button>
+            <div class="flex-row ac">
+                <el-button
+                    round
+                    type="primary"
+                    size="small"
+                    class="block mb-4 mr-2"
+                    icon="el-icon-plus"
+                >
+                    Añadir {{ field.name }}
+                </el-button>
+                <el-button
+                    round
+                    :disabled="!value.value.length"
+                    size="small"
+                    class="block mb-4"
+                    icon="el-icon-delete"
+                >
+                    Eliminar {{ field.name }}
+                </el-button>
+            </div>
             <empty
                 :title="field.name"
-                :message="`Aún no se añadido ningún ${field.name}`"
-                icon-size="3em"
+                message="Aún no se han añadido ningún elemento"
+                icon-size="2.5em"
                 height="200px"
-                icon="el-icon-tickets"
+                icon="el-icon-warning-outline"
                 background="#eee"
             ></empty>
         </template>

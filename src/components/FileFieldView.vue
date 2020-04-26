@@ -1,7 +1,7 @@
 <template>
 
 <div v-if="field" class="file-field-view">
-    <el-form-item :label="field.name">
+    <el-form-item :label="label">
         <file-uploader
             store="schemas/files"
             :disabled="true"

@@ -1,7 +1,7 @@
 <template>
 
 <div v-if="value && field" class="choices-value-editor" :class="classes">
-    <el-form-item :label="field.name">
+    <el-form-item :label="label">
         <div v-if="choices.length">
             <el-select
                 v-if="field.config.displayAs === 'select'"

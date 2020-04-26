@@ -1,7 +1,7 @@
 <template>
 
 <div v-if="value && field" class="number-value-editor">
-    <el-form-item :label="field.name">
+    <el-form-item :label="label">
         <el-input-number
             v-if="field.config.displayAs === 'input'"
             controls-position="right"

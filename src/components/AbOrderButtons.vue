@@ -1,12 +1,15 @@
 <template>
 
-<div class="ab-order-buttons">
+<div 
+    class="ab-order-buttons" 
+    :class="vertical ? 'vertical' : 'horizontal'"
+>
     <el-button
-        icon="el-icon-caret-top"
+        :icon="vertical ? 'el-icon-caret-top' : 'el-icon-caret-left'"
         @click="$emit('up')"
     ></el-button>
     <el-button
-        icon="el-icon-caret-bottom"
+        :icon="vertical ? 'el-icon-caret-bottom' : 'el-icon-caret-right'"
         @click="$emit('down')"
     ></el-button>
 </div>
@@ -19,6 +22,10 @@ export default {
     name: 'AbOrderButtons',
 
     props: {
+        vertical: {
+            type: Boolean,
+            default: true
+        }
     } 
 };
 </script>
@@ -27,7 +34,6 @@ export default {
 
 .ab-order-buttons {
     display: flex;
-    flex-flow: column nowrap;
     align-items: center;
     justify-content: center;
     .el-button {
@@ -36,8 +42,25 @@ export default {
         border: none;
         font-size: 18px;
         line-height: 12px;
+        background-color: #ecf5ff;
         i {
             line-height: 0;
+        }
+    }
+    &.vertical {
+        flex-flow: column nowrap;
+        .el-button:first-child {
+            margin-bottom: 1px;
+        }
+    }
+    &.horizontal {
+        flex-flow: row nowrap;
+        .el-button {
+            padding-left: 0;
+            padding-right: 0;
+        }
+        .el-button:first-child {
+            margin-right: 1px;
         }
     }
 }

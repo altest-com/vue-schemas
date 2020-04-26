@@ -1,13 +1,14 @@
 <template>
 
 <div v-if="field" class="images-field-view">
-    <el-form-item :label="field.name">
+    <el-form-item :label="label">
         <image-uploader
             store="schemas/images"
             :multiple="field.multi"
             :disabled="true"
-            button="drag"
-            display="carousel"
+            :height="field.config.height"
+            :button="field.config.buttonType"
+            :display="field.config.displayAs"
             :value="field.default"
         ></image-uploader>
     </el-form-item>
