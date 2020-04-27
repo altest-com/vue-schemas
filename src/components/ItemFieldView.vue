@@ -25,7 +25,6 @@
                 </el-button>
                 <el-button
                     round
-                    :disabled="!value.value.length"
                     size="small"
                     class="block mb-4"
                     icon="el-icon-delete"

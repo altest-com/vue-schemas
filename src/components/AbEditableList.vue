@@ -6,7 +6,7 @@
         label-position="top"            
         size="small"
     >
-        <el-form-item label="Añadir sección">
+        <el-form-item :label="addLabel">
             <div class="flex-row jb">
                 <el-input
                     v-model="newItem"
@@ -22,7 +22,7 @@
             </div>                
         </el-form-item>
 
-        <el-form-item label="Secciones">
+        <el-form-item :label="listLabel">
             <div class="items-list mt-2">
                 <div 
                     v-for="(item, index) in value" 
@@ -30,7 +30,8 @@
                     class="item flex-row jb ac"
                 >
                     <div class="item-value flex-row js ac">
-                        <ab-order-buttons 
+                        <ab-order-buttons
+                            v-if="sortable" 
                             @up="onItemUp(index)"
                             @down="onItemDown(index)"
                             class="mr-2"
@@ -94,6 +95,22 @@ export default {
         value: {
             type: Array,
             required: true
+        },
+        listLabel: {
+            type: String,
+            default: 'Opciones'
+        },
+        addLabel: {
+            type: String,
+            default: 'Añadir opción'
+        },
+        manage: {
+            type: Boolean,
+            default: true
+        },
+        sortable: {
+            type: Boolean,
+            default: true
         }
     },
 
@@ -111,10 +128,15 @@ export default {
     methods: {
         onAddItem() {
             if (this.newItem) {
-                this.$emit('input', [...this.value, {
-                    id: randId(),
-                    name: this.newItem
-                }]);
+                if (this.manage) {
+                    this.$emit('input', [...this.value, {
+                        id: randId(),
+                        name: this.newItem
+                    }]);
+                } else {
+                    this.$emit('add', this.newItem);
+                }
+                this.newItem = '';
             }
         },
         onStartEdit(item) {
@@ -127,28 +149,46 @@ export default {
         onFinishEdit(item, change = true) {
             this.editId = null;
             if (change) {
-                this.$emit('input', this.value.map(item_ => {
-                    return item_.id === item.id ? {
-                        id: item.id,
-                        name: this.editValue
-                    } : item_;
-                }));
+                if (this.manage) {
+                    this.$emit('input', this.value.map(item_ => {
+                        return item_.id === item.id ? {
+                            id: item.id,
+                            name: this.editValue
+                        } : item_;
+                    }));
+                } else {
+                    this.$emit('edit', item.id, this.editValue);
+                }
             }
             this.editValue = '';
         },
         onRemoveItem(item) {
-            this.$emit('input', this.value.filter(
-                item_ => item_.id !== item.id
-            ));
+            if (this.manage) {
+                this.$emit('input', this.value.filter(
+                    item_ => item_.id !== item.id
+                ));
+            } else {
+                this.$emit('remove', item.id);
+            }
         },
         onItemUp(index) {
             if (index > 0) {
-                this.$emit('input', move(this.value, index, index - 1));
+                const value = move(this.value, index, index - 1);
+                if (this.manage) {
+                    this.$emit('input', value);
+                } else {
+                    this.$emit('sort', value.map(val => val.id));
+                }
             }
         },
         onItemDown(index) {
             if (index < this.value.length) {
-                this.$emit('input', move(this.value, index, index + 1));
+                const value = move(this.value, index, index + 1);
+                if (this.manage) {
+                    this.$emit('input', value);
+                } else {
+                    this.$emit('sort', value.map(val => val.id));
+                }
             }
         }           
     }    

@@ -28,22 +28,7 @@
                 </el-select>
             </el-form-item>
 
-            <el-form-item label="Añadir opción">
-                <div class="flex-row jb">
-                    <el-input
-                        v-model="addChoice"
-                        placeholder="Opción"                    
-                    ></el-input>
-                    <el-button 
-                        type="primary" 
-                        icon="el-icon-plus"
-                        class="ml-2"
-                        @click="onAddChoice"
-                    ></el-button>
-                </div>                
-            </el-form-item>
-
-            <el-form-item label="Selección múltiple">
+            <el-form-item label="Selección múltiple" class="switch">
                 <el-switch
                     :value="field.config.multi"           
                     @change="val => onConfigChange({multi: val})"
@@ -80,6 +65,18 @@
                     ></el-option>
                 </el-select>
             </el-form-item>
+
+            <ab-editable-list 
+                :value="choices"
+                :manage="false"
+                :sortable="false"
+                addLabel="Añadir opción"
+                listLabel="Opciones"
+                @add="onAddChoice"
+                @edit="onEditChoice"
+                @remove="onRemoveChoice"
+                @sort="onSortChoices"
+            ></ab-editable-list>            
         </el-form>
     </template>
 </field-editor>
@@ -91,6 +88,7 @@
 import { choicesConfigModel } from '../store/choices-fields/models';
 import FieldEditor from './FieldEditor';
 import FieldEditorMixin from './FieldEditorMixin';
+import AbEditableList from './AbEditableList';
 
 const displayChoices = Object.keys(
     choicesConfigModel.DISPLAY_CHOICES
@@ -110,7 +108,8 @@ export default {
     name: 'ChoicesFieldEditor',
 
     components: {
-        FieldEditor
+        FieldEditor,
+        AbEditableList
     },
 
     mixins: [FieldEditorMixin],
@@ -119,7 +118,6 @@ export default {
         return {
             displayChoices: displayChoices,
             layoutChoices: layoutChoices,
-            addChoice: '',
             fieldStore: 'choicesFields'
         };
     },
@@ -139,13 +137,50 @@ export default {
     },
 
     methods: {
-        onAddChoice() {
+        updateField() {
+            this.$store.dispatch(
+                'schemas/choicesFields/retrieveItem', 
+                this.fieldId
+            );
+        },
+        onAddChoice(name) {
             this.$store.dispatch('schemas/choices/createItem', {
                 persist: true,
-                item: {name: this.addChoice, field: this.fieldId}
+                item: {
+                    name: name, 
+                    field: this.fieldId
+                }
             }).then(() => {
-                this.$store.dispatch('schemas/choicesFields/retrieveItem', this.fieldId);
-                this.addChoice = '';
+                this.updateField();
+            });
+        },
+        onEditChoice(id, name) {
+            this.$store.dispatch('schemas/choices/updateItem', {
+                persist: true,
+                item: {
+                    id: id,
+                    name: name
+                }
+            }).then(() => {
+                this.updateField();
+            });
+        },
+        onRemoveChoice(id) {
+            this.$store.dispatch(
+                'schemas/choices/destroyItem', id
+            ).then(() => {
+                this.updateField();
+            });
+        },
+        onSortChoices(choices) {
+            this.$store.dispatch('schemas/choicesFields/updateItem', {
+                persist: true,
+                item: {
+                    id: this.fieldId,
+                    choices: choices
+                }
+            }).then(() => {
+                this.updateField();
             });
         }
     }
