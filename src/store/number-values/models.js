@@ -1,5 +1,5 @@
 import { ValueModel, valueModel } from '../values/models';
-import { readers } from 'vrudex';
+import { readers, writers } from 'vrudex';
 
 class NumberValueModel extends ValueModel {
     props = Object.assign({}, valueModel.props, {
@@ -12,7 +12,8 @@ class NumberValueModel extends ValueModel {
             writable: true,
             api: 'value',
             type: Number,
-            reader: readers.numberReader
+            reader: readers.numberReader,
+            writer: writers.numberWriter
         }
     })
 }

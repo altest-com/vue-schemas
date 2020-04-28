@@ -58,19 +58,28 @@
             </div>            
         </template>
         <template v-if="panel === 'field'">
-            <div class="text-lg text-w6">Editar Campo</div>
+            <div class="flex-row ac">
+                <el-button 
+                    type="text" 
+                    icon="el-icon-back" 
+                    class="mr-2 back"
+                    @click="onCloseFieldEditor"
+                ></el-button>
+                <div class="text-lg text-w6">Editar Campo</div>
+            </div>
+            
             <div class="flex-row">
                 <tool-button
-                    class="mr-1"
+                    tooltip="Clonar campo" 
+                    icon="el-icon-copy-document"
+                    @click="onCloneField"
+                ></tool-button>
+                <tool-button
+                    class="ml-1"
                     tooltip="Eliminar campo" 
                     icon="el-icon-delete"
                     @click="onDeleteField"
-                ></tool-button>
-                <tool-button
-                    tooltip="Salir" 
-                    icon="el-icon-close"
-                    @click="onCloseFieldEditor"
-                ></tool-button>
+                ></tool-button>                
             </div>
         </template>
     </template>
@@ -327,6 +336,22 @@ export default {
             }
         },
 
+        onCloneField() {
+            if (this.curField) {
+                const order = this.curField.order - 1;
+                const param = params[this.curField.type];
+                this.$store.dispatch(
+                    `schemas/${param.fieldStore}/createItem`, {
+                        item: {...this.curField, order: order}, 
+                        persist: true
+                }).then(({id, type}) => {
+                    this.$store.dispatch(
+                        'schemas/itemSchemas/retrieveItem', this.schemaId
+                    );
+                });
+            }
+        },
+
         onParamChange(data) {
             this.$store.dispatch('schemas/itemSchemas/updateItem', {
                 persist: false,
@@ -410,6 +435,21 @@ export default {
     }
     .field-views-list {
         max-width: 500px;
+    }
+    .el-button.back 
+    {
+        padding: 0;
+        i {
+            margin-top: 3px;
+            font-weight: 700;
+            font-size: 18px;
+            color: #606266;
+        }
+        &:hover, &:active {
+            i {
+                color: #409eff; 
+            }
+        }
     }
 }
 

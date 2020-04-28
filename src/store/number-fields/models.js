@@ -5,7 +5,7 @@ import {
     ConfigModel 
 } from '../fields/models';
 
-import { readers } from 'vrudex';
+import { readers, writers } from 'vrudex';
 
 class NumberConfigModel extends ConfigModel {
     DISPLAY_INPUT = 'input'
@@ -66,19 +66,22 @@ class NumberFieldModel extends FieldModel {
             writable: true,
             api: 'default',
             type: Number,
-            reader: readers.numberReader
+            reader: readers.numberReader,
+            writer: writers.numberWriter
         },
         minValue: {
             writable: true,
             api: 'min_value',
             type: Number,
-            reader: readers.numberReader
+            reader: readers.numberReader,
+            writer: writers.numberWriter
         },
         maxValue: {
             writable: true,
             api: 'max_value',
             type: Number,
-            reader: readers.numberReader
+            reader: readers.numberReader,
+            writer: writers.numberWriter
         },
         config: {
             writable: true,
