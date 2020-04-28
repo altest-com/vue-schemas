@@ -52,7 +52,9 @@
             </el-select>
         </el-form-item>
 
-        <ab-editable-list 
+        <ab-editable-list
+            addLabel="Añadir sección"
+            listLabel="Secciones"
             :value="config.sections"
             @input="val => onParamChange({sections: val})"
         ></ab-editable-list>

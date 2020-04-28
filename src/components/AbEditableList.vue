@@ -44,7 +44,7 @@
                             @change="onFinishEdit(item, true)"
                             @blur="onFinishEdit(item, false)"
                         ></el-input>
-                        <div v-else>{{ item.name }}</div>
+                        <div v-else class="label">{{ item.name }}</div>
                     </div>
                     <div class="item-actions">
                         <el-button 
@@ -207,9 +207,12 @@ export default {
             &:first-child {
                 border-top: 1px solid #ebeef5;
             }
-            .item-actions .el-button {
-                border: none;
-                padding: 0px;
+            .item-actions {
+                flex-shrink: 0;
+                .el-button {
+                    border: none;
+                    padding: 0px;
+                }
             }
             .item-value, .el-input, input, .item-actions {
                 height: 30px;
@@ -221,6 +224,14 @@ export default {
                 background-color: #f5f7fa;
                 .ab-order-buttons, .item-actions {
                     visibility: visible;
+                }
+            }
+            .item-value {
+                min-width: 0;
+                >.label {
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
                 }
             }
         }

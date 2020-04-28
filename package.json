@@ -1,6 +1,6 @@
 {
     "name": "vue-schemas",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "description": "Dynamic schemas and forms builder",
     "main": "./src/index.js",
     "scripts": {

@@ -11,7 +11,9 @@
         ></query-select>                
     </el-form-item>
     <template v-else>
-        <label v-if="label" class="el-form-item__label">{{ label }}</label>
+        <label v-if="label" class="el-form-item__label nest">
+            {{ label }}
+        </label>
         <template v-if="field.multi">
             <div class="flex-row ac">
                 <el-button
@@ -90,4 +92,11 @@ export default {
 </script>
 
 <style lang="scss">
+
+.item-field-view {
+    .el-form-item__label.nest {
+        font-weight: 600;
+    }    
+}
+
 </style>
