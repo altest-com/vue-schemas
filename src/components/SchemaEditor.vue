@@ -284,6 +284,10 @@ export default {
         }
     },
 
+    created() {
+        this.setCurFieldKey(null);
+    },
+
     beforeRouteEnter(to, from, next) {
         next(vm => {
             vm.routeFrom = from;
@@ -296,14 +300,8 @@ export default {
             this.$store.dispatch('schemas/itemSchemas/setField', key);
         },
 
-        onSchemaClick() {
-            /* this.panel = 'schema'; */
-            this.setCurFieldKey(null);
-        },
-
         onCloseFieldEditor() {
             this.setCurFieldKey(null);
-            /* this.panel = 'schema'; */
         },
 
         onAddField(fieldType) {    
@@ -340,15 +338,46 @@ export default {
             if (this.curField) {
                 const order = this.curField.order - 1;
                 const param = params[this.curField.type];
+                let field = {...this.curField, order: order};
+                
+                if (param.type === 'choices') {
+                    field = {
+                        ...field, 
+                        order: order, 
+                        default: [], 
+                        choices: []
+                    };
+                }
+
                 this.$store.dispatch(
                     `schemas/${param.fieldStore}/createItem`, {
-                        item: {...this.curField, order: order}, 
+                        item: field, 
                         persist: true
-                }).then(({id, type}) => {
+                }).then(({ id }) => {
                     this.$store.dispatch(
                         'schemas/itemSchemas/retrieveItem', this.schemaId
                     );
-                });
+                    if (param.type === 'choices') {
+                        const state = this.$store.state.schemas.choices.items;
+                        const proms = [];
+                        this.curField.choices.forEach(choiceId => {
+                            const choice = state[choiceId];
+                            if (choice) {
+                                proms.push(this.$store.dispatch(
+                                    `schemas/choices/createItem`, {
+                                        item: {name: choice.name, field: id}, 
+                                        persist: true
+                                    }
+                                ));
+                            }
+                        });
+                        Promise.all(proms).then(() => {
+                            this.$store.dispatch(
+                                `schemas/${param.fieldStore}/retrieveItem`, id
+                            );
+                        });
+                    }
+                });               
             }
         },
 

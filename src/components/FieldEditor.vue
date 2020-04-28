@@ -16,8 +16,8 @@
                     ></el-input>
                 </el-form-item>
 
-                <div class="flex-row js">
-                    <el-form-item label="Requerido" class="mr-2">
+                <div class="flex-row js as">
+                    <el-form-item label="Requerido" class="mr-2 shrink-0">
                         <el-radio-group 
                             :value="field.required"
                             @input="val => onParamChange({required: val})"
@@ -31,7 +31,7 @@
                         </el-radio-group>
                     </el-form-item>
 
-                    <el-form-item label="Orden">
+                    <el-form-item label="Orden" class="grow-1">
                         <el-input-number 
                             :value="field.order"
                             controls-position="right"

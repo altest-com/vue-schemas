@@ -23,18 +23,11 @@
                 ></image-uploader>
             </el-form-item>
 
-            <el-form-item label="Múltiples imágenes" class="mr-2">
-                <el-radio-group 
-                    :value="field.multi"
-                    @input="val => onParamChange({multi: val})"
-                >
-                    <el-radio-button :label="true">
-                        Si
-                    </el-radio-button>
-                    <el-radio-button :label="false">
-                        No
-                    </el-radio-button>
-                </el-radio-group>
+            <el-form-item label="Múltiples imágenes" class="switch">
+                <el-switch
+                    :value="field.multi"           
+                    @change="val => onParamChange({multi: val})"
+                ></el-switch>
             </el-form-item>
 
             <el-form-item label="Altura de las imágenes">
