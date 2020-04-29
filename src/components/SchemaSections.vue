@@ -123,6 +123,16 @@ export default {
                     config: {...this.config, ...data}
                 }
             });
+        },
+        onSectionsChange(sections) {            
+            const sectionsId = this.config.sections.map(({ id }) => id);
+            if (
+                sections.length !== sectionsId.length || 
+                !sections.every(({ id }) => sectionsId.includes(id))
+            ) {
+                this.$emit();
+            }
+            this.onParamChange({sections: sections});
         }
     }    
 };

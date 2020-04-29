@@ -1,14 +1,14 @@
 <template>
 
 <sections-layout v-if="item && schema" :schema-id="schema.id">
-    <template v-slot:section="{ sectionId }">
+    <template v-if="config.sections.length" v-slot:section="{ sectionId }">
         <items-value-editors
             class="mt-3"
             :values="sectionValues[sectionId]"
             :style="{maxWidth: formWidth}"
         ></items-value-editors>
     </template>
-    <template v-slot:fields>
+    <template v-else v-slot:fields>
         <items-value-editors
             :values="sortedValues"
             :style="{maxWidth: formWidth}"
@@ -102,15 +102,17 @@ export default {
 
         sectionValues() {
             const values = {};
-            if (this.config.sections.length) {
-                const sectionId_ = this.config.sections[0].id;
+            const sections = this.config.sections;
+            if (sections.length) {
+                sections.forEach(({ id }) => {
+                    values[id] = [];
+                });
+                const sectionId_ = sections[0].id;
                 this.sortedValues.forEach(value => {
-                    const sectionId = value.section || sectionId_;
-                    if (values[sectionId]) {
-                        values[sectionId].push(value);
-                    } else {
-                        values[sectionId] = [value];
-                    }
+                    const valueSection = value.section;
+                    const sectionId = !values[valueSection] ? 
+                        sectionId_ : valueSection;
+                    values[sectionId].push(value);
                 });
             }
             return values;

@@ -52,6 +52,7 @@
 
                 <el-form-item label="Mostrar en la sección">
                     <el-select
+                        clearable
                         :value="field.config.section"
                         @change="val => onConfigChange({section: val})"
                     >

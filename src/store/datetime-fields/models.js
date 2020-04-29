@@ -45,7 +45,7 @@ class DateTimeFieldModel extends FieldModel {
             writable: true,
             api: 'name',
             type: String,
-            default: 'Fecha y hora'
+            default: 'Fecha'
         },
         default: {
             writable: true,

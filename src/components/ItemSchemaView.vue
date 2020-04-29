@@ -1,14 +1,14 @@
 <template>
 
 <sections-layout v-if="schema" :schema-id="schema.id">
-    <template v-slot:section="{ sectionId }">
+    <template v-if="config.sections.length" v-slot:section="{ sectionId }">
         <field-views-list
             class="mt-3"
             :fields="sectionFields[sectionId]"
             :focus="false"
         ></field-views-list>
     </template>
-    <template v-slot:fields>
+    <template v-else v-slot:fields>
         <field-views-list
             class="mt-3"
             :fields="sortedFields"
@@ -79,15 +79,17 @@ export default {
 
         sectionFields() {
             const fields = {};
-            if (this.config.sections.length) {
-                const sectionId_ = this.config.sections[0].id;
+            const sections = this.config.sections;
+            if (sections.length) {
+                sections.forEach(({ id }) => {
+                    fields[id] = [];
+                });
+                const sectionId_ = sections[0].id;
                 this.sortedFields.forEach(field => {
-                    const sectionId = field.config.section || sectionId_;
-                    if (fields[sectionId]) {
-                        fields[sectionId].push(field);
-                    } else {
-                        fields[sectionId] = [field];
-                    }
+                    const fieldSection = field.config.section;
+                    const sectionId = !fields[fieldSection] ? 
+                        sectionId_ : fieldSection;
+                    fields[sectionId].push(field);
                 });
             }
             return fields;
