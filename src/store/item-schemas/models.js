@@ -159,8 +159,61 @@ class ItemSchemaModel extends Model {
 
 const itemSchemaModel = new ItemSchemaModel();
 
+const reverse = arr => {
+    const arr_ = [];
+    arr.forEach(val => {
+        arr_.push(val);
+        arr_.push('-' + val);
+    });
+    return arr_;
+};
+
+class SchemasFilter extends Model {
+    ORDER_CHOICES = {
+        'name': 'Nombre',
+        'category': 'Categoría',
+        'created_at': 'Fecha de creación',
+        'updated_at': 'Fecha de actualización'
+    }
+
+    props = {
+        orderBy: {
+            writable: true,
+            api: 'order_by',
+            type: String,
+            choices: reverse(Object.keys(this.ORDER_CHOICES)),
+            default: 'created_at'
+        },
+        name: {
+            writable: true,
+            api: 'name__icontains',
+            type: String
+        },
+        category: {
+            writable: true,
+            api: 'category_id__in',
+            type: Number,
+            many: true
+        },
+        minCreatedAt: {
+            writable: true,
+            api: 'created_at__gte',
+            type: Date
+        },
+        maxCreatedAt: {
+            writable: true,
+            api: 'max_created_lte',
+            type: Date
+        }
+    }
+}
+
+const schemasFilter = new SchemasFilter();
+
 export {
     itemSchemaModel,
     ItemSchemaModel,
+    SchemasFilter,
+    schemasFilter,
     configModel
 };

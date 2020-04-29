@@ -80,11 +80,11 @@
     </template>
 
     <template v-slot:side-content>
-<!--         <schemas-filter 
+        <schemas-filter 
             v-if="panel === 'search'"
         ></schemas-filter>
 
-        <schema-details
+        <!--<schema-details
             v-else-if="panel === 'details'"
             :schema-id="curSchemaId"
         ></schema-details> -->
@@ -100,8 +100,8 @@ import { itemSchemaModel } from '../store/item-schemas/models';
 import ListHeader from './ListHeader';
 import SplitView from './SplitView';
 import SchemasList from './SchemasList';
-/* import SchemasFilter from './components/SchemasFilter';
-import SchemaDetails from './components/SchemaDetails'; */
+import SchemasFilter from './SchemasFilter';
+/* import SchemaDetails from './components/SchemaDetails'; */
 
 const newSchemaId = 'newId';
 
@@ -112,8 +112,8 @@ export default {
         SplitView,
         ListHeader,
         SchemasList,
-        ToolButton/* ,
-        SchemasFilter,        
+        ToolButton,
+        SchemasFilter/* ,        
         SchemaDetails  */       
     },
 

@@ -25,7 +25,7 @@
         message="No existen resultados para mostrar"
         icon-size="3em"
         height="383px"
-        icon="el-icon-user"
+        icon="el-icon-warning-outline"
         background="#eee"
     ></empty> 
 

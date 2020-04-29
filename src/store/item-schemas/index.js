@@ -1,5 +1,5 @@
 import { Api, actions, mutations, getters } from 'vrudex';
-import { itemSchemaModel } from './models';
+import { itemSchemaModel, schemasFilter } from './models';
 import config from '../../config';
 
 const PAGE_SIZE = 24;
@@ -12,13 +12,12 @@ const itemSchemaApi = new Api(
 const state = {
     MODEL: itemSchemaModel,
     API: itemSchemaApi,
-    FILTER: null,    
+    FILTER: schemasFilter,    
     items: {},
     sortId: [],
     count: 0,
     pageNumber: 0,
-    filter: null,
-    orderBy: 'name',
+    filter: schemasFilter.create(),
     pageSize: PAGE_SIZE,
     loading: false,
     getting: {},

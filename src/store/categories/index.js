@@ -17,7 +17,6 @@ const state = {
     count: 0,
     pageNumber: 0,
     filter: null,
-    orderBy: '',
     pageSize: PAGE_SIZE,
     loading: false,
     getting: {}
