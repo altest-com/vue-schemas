@@ -7,12 +7,15 @@ const install = (Vue, options = {}) => {
     const components = require('./components');
     const store = require('./store').default;
 
-    for (const key in components) {
-        if (!options.component || options.components.includes['key']) {
-            const _key = options.prefix ? options.prefix + key : key;
-            Vue.component(_key, components[key]);
+    const register = options.components || Object.keys(components); 
+    register.forEach(name => {
+        if (components[name]) {
+            const _name = options.prefix ? options.prefix + name : name;
+            Vue.component(_name, components[name]);
+        } else {
+            console.warn(`Unknown component name "${name}".`);
         }
-    }
+    });
 
     if (options.store) {
         options.store.registerModule('schemas', store);
