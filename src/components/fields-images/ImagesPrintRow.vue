@@ -1,25 +1,21 @@
 <template>
 
 <component class="image-print-row" :is="node">
-    <template v-if="view === 'table'">
-        <td class="label">{{ label }}</td>
-        <div class="value">
-            <img 
-                v-for="image in images"
-                :key="image.id"
-                :src="image.image"
-            >
-        </div>
-    </template>
-    <template v-else-if="view === 'list'">
+
+    <div v-if="layout === 'blocks' || layout === 'fluid'">
         <div class="label">{{ label }}</div>
         <div class="value">
-            <img 
-                v-for="image in images"
-                :key="image.id"
-                :src="image.image"
-            >
+            <img v-for="image in images" :key="image.id" :src="image.image">
         </div>
+    </div>
+    <template v-if="layout === 'vtable'">
+        <td class="label">{{ label }}</td>
+        <td class="value">
+            <img v-for="image in images" :key="image.id" :src="image.image">
+        </td>
+    </template>
+    <template v-if="layout === 'htable'">
+        <img v-for="image in images" :key="image.id" :src="image.image">
     </template>
 </component>
 

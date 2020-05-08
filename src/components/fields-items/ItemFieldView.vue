@@ -1,7 +1,7 @@
 <template>
 
 <div v-if="field" class="item-field-view">
-    <el-form-item v-if="!editNested" :label="label">
+    <el-form-item v-if="!isNested" :label="label">
         <query-select
             :multiple="field.multi"
             :disabled="!hasRelated"
@@ -81,7 +81,7 @@ export default {
         params() {
             return this.hasRelated ? {schema_id: this.field.targetSchema} : {};
         },
-        editNested() {
+        isNested() {
             return (
                 this.hasRelated && 
                 this.field.targetSchema !== this.field.schema && 

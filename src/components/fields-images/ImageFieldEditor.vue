@@ -4,7 +4,7 @@
     v-if="field"
     :field-id="fieldId" 
     store="imagesFields" 
-    class="images-field-editor"
+    class="image-field-editor"
 >
     <template v-slot:extend>
         <el-form
@@ -92,7 +92,7 @@ const buttonChoices = Object.keys(
 }));
 
 export default {
-    name: 'ImagesFieldEditor',
+    name: 'ImageFieldEditor',
 
     components: {
         ImageUploader,

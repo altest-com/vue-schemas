@@ -9,17 +9,25 @@
 
     <template v-else-if="config.sections.length">
         <div v-for="section in config.sections" :key="section.id">
-            <div class="section-title"> 
+            <div class="section-title" :style="titleStyle"> 
                 {{ section.name }}
             </div>
-            <item-print-values :values="sectionValues[section.id]">
-            </item-print-values>
+            <item-print-values 
+                :values="sectionValues[section.id]"
+                :layout="config.printLayout"
+                :level="level"
+                :labels="config.printLabels"
+            ></item-print-values>
         </div>
     </template>
 
     <template v-else>
-        <item-print-values :values="sortedValues">
-        </item-print-values>
+        <item-print-values 
+            :values="sortedValues" 
+            :layout="config.printLayout"
+            :labels="config.printLabels"
+            :level="level"
+        ></item-print-values>
     </template>
 </div>
 
@@ -31,8 +39,14 @@ import params from '../../params';
 import ItemPrintValues from './ItemPrintValues';
 import { loadSchema, loadItem } from '../loader';
 
+const maxTitleSize = 18;
+const minTitleSize = 12;
+const maxTitleMargin = 18;
+const minTitleMargin = 12;
+const varTitleSize = 0.9;
+
 export default {
-    name: 'ItemEditor',
+    name: 'ItemPrint',
 
     components: {
         ItemPrintValues
@@ -42,6 +56,10 @@ export default {
         itemId: {
             type: [Number, String],
             required: true
+        },
+        level: {
+            type: Number,
+            default: 1
         }
     },
 
@@ -82,10 +100,14 @@ export default {
                         const fieldId = value.field;
                         const field = this.state[fieldStore].items[fieldId];
                         if (field) {
-                            values[value.type + value.id] = {
+                            const key = value.type + value.id;
+                            values[key] = {
                                 id: value.id,
+                                key: key,
                                 type: value.type,
                                 order: value.order,
+                                name: field.name,
+                                showLabel: field.config.showLabel,
                                 section: field.config.section
                             };
                         }                        
@@ -117,6 +139,18 @@ export default {
                 });
             }
             return values;
+        },
+
+        titleStyle() {
+            const ratio = Math.pow(varTitleSize, this.level - 1);
+            const size = Math.max(minTitleSize, ratio * maxTitleSize);
+            const margin = Math.max(minTitleMargin, ratio * maxTitleMargin);
+
+            return {
+                fontSize: size + 'pt',
+                marginTop: (2 * margin).toFixed(1) + 'pt',
+                marginBottom: margin.toFixed(1) + 'pt' 
+            };
         }
     },
 
@@ -133,3 +167,9 @@ export default {
     }   
 };
 </script>
+
+<style lang="scss">
+
+@import '../../styles/print.scss';
+
+</style>

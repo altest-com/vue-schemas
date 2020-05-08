@@ -13,7 +13,7 @@
         class="field-wrapper"
         :style="{width: field.config.width}"
         :class="{'focus': focus && (field.type + field.id) === focusKey}"
-        @click.stop="onFieldClick(field.type + field.id)"
+        @click="onFieldClick(field.type + field.id)"
     >
         <boolean-field-view 
             v-if="field.type === 'boolean'"

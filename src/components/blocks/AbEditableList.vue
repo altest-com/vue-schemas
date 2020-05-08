@@ -108,6 +108,10 @@ export default {
             type: Boolean,
             default: true
         },
+        delete: {
+            type: Boolean,
+            default: true
+        },
         sortable: {
             type: Boolean,
             default: true
@@ -163,7 +167,7 @@ export default {
             this.editValue = '';
         },
         onRemoveItem(item) {
-            if (this.manage) {
+            if (this.manage && this.delete) {
                 this.$emit('input', this.value.filter(
                     item_ => item_.id !== item.id
                 ));

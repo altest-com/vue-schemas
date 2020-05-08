@@ -10,14 +10,12 @@
     <sections-layout v-else :schema-id="schema.id">
         <template v-if="config.sections.length" v-slot:section="{ sectionId }">
             <field-views-list
-                class="mt-3"
                 :fields="sectionFields[sectionId]"
                 :focus="false"
             ></field-views-list>
         </template>
         <template v-else v-slot:fields>
             <field-views-list
-                class="mt-3"
                 :fields="sortedFields"
                 :focus="false"
             ></field-views-list>

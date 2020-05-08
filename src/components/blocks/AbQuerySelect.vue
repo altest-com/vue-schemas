@@ -5,20 +5,23 @@
     :multiple="multiple"
     :disabled="disabled"
     remote
-    clearable
+    :clearable="clearable"
+    :popper-class="popperClass"
     :placeholder="placeholder"                              
     :remote-method="fetchData"
     :loading="querying"
     :automatic-dropdown="false"
-    :value="elValue"
+    :value="value"
     @change="onChange"
 >
     <el-option
         v-for="choice in choices"
         :key="choice.id"
-        :label="choice.name"
+        :label="choice.label"
         :value="choice.id"
-    ></el-option>
+    >
+        <slot :choice="choice"></slot>
+    </el-option>
 </el-select>
 
 </template>
@@ -26,7 +29,7 @@
 <script>
 
 export default {
-    name: 'QuerySelect',
+    name: 'AbQuerySelect',
 
     props: {
         store: {
@@ -34,8 +37,8 @@ export default {
             required: true
         },
         value: {
-            type: Array,
-            default: () => []
+            type: null,
+            default: null
         },        
         placeholder: {
             type: String,
@@ -44,10 +47,6 @@ export default {
         params: {
             type: Object,
             default: () => {}
-        },
-        multiple: {
-            type: Boolean,
-            default: true
         },
         query: {
             type: String,
@@ -58,6 +57,22 @@ export default {
             default: false
         },
         preload: {
+            type: Number,
+            default: 24
+        },
+        labels: {
+            type: Array,
+            default: () => ['name']
+        },
+        fields: {
+            type: Array,
+            default: () => ['name']
+        },
+        popperClass: {
+            type: String,
+            default: ''
+        },
+        clearable: {
             type: Boolean,
             default: true
         }
@@ -67,11 +82,15 @@ export default {
         return {
             querying: false,
             queriedChoices: [],
-            defaultChoices: []
+            defaultChoices: [],
+            valueChoices: []
         };
     },
 
     computed: {
+        multiple() {
+            return Array.isArray(this.value);
+        },
         state() {
             let state = this.$store.state;
             this.store.split('/').forEach(path => {
@@ -83,74 +102,100 @@ export default {
             return this.state.API;   
         },
         choices() {
-            const choices = [];
-            this.value.forEach(id => {
-                if (id || id === 0) {
-                    this.$store.dispatch(`${this.store}/getItem`, id);
-                    const choice = this.state.items[id];
-                    if (choice) {
-                        choices.push({
-                            id: choice.id,
-                            name: choice.name || choice.id
-                        });
-                    }
-                }                
-            });
+            const choices = this.valueChoices.slice();
 
             const choices_ = this.queriedChoices.length ? 
                 this.queriedChoices : this.defaultChoices;
 
             choices_.forEach(choice_ => {
                 if (!choices.some(choice => choice.id === choice_.id)) {
-                    choices.push({
-                        id: choice_.id,
-                        name: choice_.name || choice_.id
-                    });
+                    choices.push(choice_);
                 }
             });
-            return choices;          
-        },
-        elValue() {
-            return this.multiple ? this.value : this.value[0]; 
+            return choices;
         }
     },
 
     watch: {
         store(newVal, oldVal) {
-            if (newVal !== oldVal) {
+            if (this.preload > 0 && newVal !== oldVal) {
                 this.setDefaults();
             }
+        },
+        params() {
+            if (this.preload > 0) {
+                this.setDefaults();
+            }
+        },
+        value(value) {
+            this.updateValueChoices();
         }
     },
 
     created() {
-        if (this.preload) {
+        this.cachedChoices = {};
+        this.updateValueChoices();
+        if (this.preload > 0) {
             this.setDefaults();
         }
     },
 
     methods: {
-        onChange(val) {
-            if (this.multiple) {
-                this.$emit('change', val);
+
+        buildChoice(data) {
+            const label = this.labels.map(val => data[val]).join(' ');
+            const choice = {
+                id: data.id, 
+                label: label
+            };
+            this.fields.forEach(field => {
+                choice[field] = data[field];
+            });
+            return choice;
+        },
+
+        updateValueChoices() {
+            const values = this.multiple ? this.value : [this.value];
+            const valueChoices = [];
+            const proms = [];
+            values.forEach(id => {
+                if (id || id === 0) {
+                    if (this.cachedChoices[id]) {
+                        valueChoices.push(this.cachedChoices[id]);
+                    } else {
+                        proms.push(
+                            this.api.retrieve(id).then(({ data }) => {
+                                const choice_ = this.buildChoice(data);
+                                valueChoices.push(choice_);
+                                this.cachedChoices[id] = choice_;
+                            })
+                        );
+                    }
+                }                
+            });
+            if (proms.length) {
+                Promise.all(proms).then(() => {
+                    this.valueChoices = valueChoices;                 
+                });
             } else {
-                this.$emit('change', (val || val === 0) ? [val] : []);
-            }            
+                this.valueChoices = valueChoices;
+            }
+        }, 
+
+        onChange(val) {
+            this.$emit('change', val);            
             this.queriedChoices = [];
         },
 
         setDefaults() {
             this.api.fetch({
-                limit: 50,
-                fields: 'id,name',
+                limit: this.preload,
+                fields: 'id,' + this.fields.join(','),
                 ...this.params
             }).then(({ data }) => {
                 const results = data.results || [];
                 this.defaultChoices = results.map(choice => {
-                    return {
-                        id: choice.id,
-                        name: choice.name
-                    };
+                    return this.buildChoice(choice);
                 });
             });
         },
@@ -161,15 +206,12 @@ export default {
                 this.querying = true;                           
                 this.api.fetch({
                     [this.query]: query, 
-                    fields: 'id,name',
+                    fields: 'id,' + this.fields.join(','),
                     ...this.params
                 }).then(({ data }) => {
                     const results = data.results || [];
                     this.queriedChoices = results.map(choice => {
-                        return {
-                            id: choice.id,
-                            name: choice.name
-                        };
+                        return this.buildChoice(choice);
                     });
                 }).catch(error => {
                     this.$log.error(error);                   

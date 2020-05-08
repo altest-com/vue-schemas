@@ -8,13 +8,11 @@
 >
     <template v-if="config.sections.length" v-slot:section="{ sectionId }">
         <field-views-list
-            class="mt-3"
             :fields="sectionFields[sectionId]"
         ></field-views-list>
     </template>
     <template v-else v-slot:fields>
         <field-views-list
-            class="mt-3"
             :fields="fields"
         ></field-views-list>
     </template>

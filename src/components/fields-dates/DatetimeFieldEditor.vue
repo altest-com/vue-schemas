@@ -4,7 +4,7 @@
     v-if="field"
     :field-id="fieldId" 
     store="dateTimeFields" 
-    class="date-field-editor"
+    class="datetime-field-editor"
 >
     <template v-slot:extend>
         <el-form
@@ -93,7 +93,7 @@ const typeChoices = Object.keys(
 }));
 
 export default {
-    name: 'DateFieldEditor',
+    name: 'DatetimeFieldEditor',
 
     components: {
         FieldEditor

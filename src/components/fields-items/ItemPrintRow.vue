@@ -1,25 +1,38 @@
 <template>
 
 <component class="item-print-row" :is="node">
-    <template v-if="view === 'table'">
-        <td class="label">{{ label }}</td>
-        <div class="value">
-            <img 
-                v-for="item in items"
-                :key="item.id"
-                :src="item.item"
-            >
-        </div>
-    </template>
-    <template v-else-if="view === 'list'">
+
+    <div v-if="layout === 'blocks' || layout === 'fluid'">
         <div class="label">{{ label }}</div>
         <div class="value">
-            <img 
-                v-for="item in items"
-                :key="item.id"
-                :src="item.item"
-            >
+            <item-print 
+                v-for="itemId in value.value"
+                :key="itemId"
+                :item-id="itemId"
+                :level="level"
+            ></item-print>
         </div>
+    </div>
+
+    <template v-else-if="layout === 'vtable'">
+        <td class="label">{{ label }}</td>
+        <td class="value">
+            <item-print 
+                v-for="itemId in value.value"
+                :key="itemId"
+                :item-id="itemId"
+                :level="level"
+            ></item-print>
+        </td>
+    </template>
+
+    <template v-else-if="layout === 'htable'">
+        <item-print 
+            v-for="itemId in value.value"
+            :key="itemId"
+            :item-id="itemId"
+            :level="level"
+        ></item-print>
     </template>
 </component>
 
@@ -32,6 +45,10 @@ import ValuePrintRow from '../fields/ValuePrintRow';
 export default {
     name: 'ItemPrintRow',
 
+    components: {
+        ItemPrint: () => import('../items/ItemPrint')
+    },
+
     mixins: [ValuePrintRow],
 
     data() {
@@ -42,7 +59,16 @@ export default {
     },
 
     computed: {
-
+        hasRelated() {
+            return !!this.field.targetSchema || this.field.targetSchema === 0; 
+        },
+        isNested() {
+            return (
+                this.hasRelated && 
+                this.field.targetSchema !== this.field.schema && 
+                this.field.config.displayAs === 'nest'
+            );
+        }
     }
 };
 </script>

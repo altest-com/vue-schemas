@@ -1,6 +1,8 @@
 const nodes = {
-    'table': 'tr',
-    'list': 'div'
+    'blocks': 'div',
+    'fluid': 'div',
+    'vtable': 'tr',
+    'htable': 'td'
 };
 
 export default {
@@ -14,10 +16,14 @@ export default {
             type: Boolean,
             default: true
         },
-        view: {
+        layout: {
             type: String,
             required: true,
             validator: val => val in nodes
+        },
+        level: {
+            type: Number,
+            default: 1
         }
     },
 
@@ -35,7 +41,7 @@ export default {
             return this.field.config.showLabel ? this.field.name : '';
         },
         node() {
-            return nodes[this.view];
+            return nodes[this.layout];
         }
     }
 };

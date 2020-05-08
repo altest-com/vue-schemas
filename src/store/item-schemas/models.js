@@ -11,6 +11,14 @@ class ConfigModel extends Model {
     TAB_POSITION_BOTTOM = 'bottom'
     TAB_POSITION_LEFT = 'left'
 
+    PRINT_LAYOUT_BLOCKS = 'blocks'
+    PRINT_LAYOUT_FLUID = 'fluid'
+    PRINT_LAYOUT_VTABLE = 'vtable'
+    PRINT_LAYOUT_HTABLE = 'htable'
+
+    PRINT_LABELS_STACK = 'stack'
+    PRINT_LABELS_INLINE = 'inline'
+
     SECTIONS_CHOICES = {
         [this.SECTIONS_TABS]: 'Pestañas',
         [this.SECTIONS_ACCORDION]: 'Acordeón',
@@ -23,6 +31,18 @@ class ConfigModel extends Model {
         [this.TAB_POSITION_RIGHT]: 'Derecha',
         [this.TAB_POSITION_BOTTOM]: 'Inferior',
         [this.TAB_POSITION_LEFT]: 'Izquierda'
+    }
+
+    PRINT_LAYOUT_CHOICES = {
+        [this.PRINT_LAYOUT_BLOCKS]: 'Bloques',
+        [this.PRINT_LAYOUT_FLUID]: 'Fluida',
+        [this.PRINT_LAYOUT_VTABLE]: 'Tabla vertical',
+        [this.PRINT_LAYOUT_HTABLE]: 'Tabla horizontal'
+    }
+
+    PRINT_LABELS_CHOICES = {
+        [this.PRINT_LABELS_STACK]: 'Vertical',
+        [this.PRINT_LABELS_INLINE]: 'En línea'
     }
 
     props = {
@@ -54,6 +74,22 @@ class ConfigModel extends Model {
             api: 'init_section',
             type: String,
             default: '',
+            fill: true
+        },
+        printLayout: {
+            writable: true,
+            api: 'print_layout',
+            type: String,
+            choices: Object.keys(this.PRINT_LAYOUT_CHOICES),
+            default: this.PRINT_LAYOUT_BLOCKS,
+            fill: true
+        },
+        printLabels: {
+            writable: true,
+            api: 'print_labels',
+            type: String,
+            choices: Object.keys(this.PRINT_LABELS_CHOICES),
+            default: this.PRINT_LABELS_STACK,
             fill: true
         }
     }

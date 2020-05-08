@@ -30,24 +30,65 @@
                 :section.sync="section"
             ></schema-fields-view>
         </el-card>
+
         <el-dialog
             title="Advertencia"
             :visible.sync="showDeleteDialog"
             width="400px"
-            center
         >
-            <p>
+            <p class="mb-0">
                 ¿Seguro deseas eliminar esta esquema de forma permanente? 
                 Se eliminará cualquier objecto asociado.
             </p>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="showDeleteDialog = false">
+                <el-button 
+                    icon="el-icon-close"
+                    size="small"
+                    class="mr-2"
+                    @click="showDeleteDialog = false"
+                >
                     Cancelar
                 </el-button>
                 <el-button 
                     type="danger" 
                     icon="el-icon-delete" 
+                    size="small"
                     @click="onDeleteSchema"
+                >Confirmar</el-button>
+            </span>
+        </el-dialog>
+
+        <el-dialog
+            title="Clonar esquema"
+            :visible.sync="showCloneDialog"
+            width="400px"
+            :close-on-click-modal="!cloningSchema"
+            :close-on-press-escape="!cloningSchema"
+            :show-close="!cloningSchema" 
+        >
+            <el-form label-position="top" size="small">
+                <el-form-item label="Nombre del nuevo esquema">
+                    <el-input v-model="cloneName"></el-input>
+                </el-form-item>
+            </el-form>
+
+            <span slot="footer" class="dialog-footer">
+                <el-button 
+                    :disabled="cloningSchema" 
+                    icon="el-icon-close"
+                    size="small"
+                    @click="showCloneDialog = false"
+                >
+                    Cancelar
+                </el-button>
+                <el-button
+                    :disabled="cloningSchema"
+                    type="primary" 
+                    icon="el-icon-check"
+                    size="small"
+                    class="ml-2"
+                    @click="onConfirmCloneSchema"
+                    v-loading="cloningSchema" 
                 >Confirmar</el-button>
             </span>
         </el-dialog>
@@ -58,8 +99,16 @@
             <div class="text-lg text-w6">Editar Esquema</div>
             <div class="flex-row">
                 <tool-button
+                    tooltip="Clonar esquema"
+                    :disabled="cloningSchema" 
+                    :icon="cloningSchema ? 
+                        'el-icon-loading' : 'el-icon-copy-document'"
+                    @click="onRequestCloneSchema"
+                ></tool-button>
+                <tool-button
                     tooltip="Eliminar esquema" 
                     icon="el-icon-delete"
+                    class="ml-1"
                     @click="showDeleteDialog = true"
                 ></tool-button>
             </div>            
@@ -77,8 +126,10 @@
             
             <div class="flex-row">
                 <tool-button
-                    tooltip="Clonar campo" 
-                    icon="el-icon-copy-document"
+                    tooltip="Clonar campo"
+                    :disabled="cloningField" 
+                    :icon="cloningField ? 
+                        'el-icon-loading' : 'el-icon-copy-document'"
                     @click="onCloneField"
                 ></tool-button>
                 <tool-button
@@ -103,90 +154,19 @@
                 v-loading="true" 
                 :style="{'height': '400px'}"
             ></div>
-            
-            <el-tabs v-else v-model="editorTab" class="mt-3">
-                <el-tab-pane label="Esquema" name="schema">
-                    <el-form
-                        ref="form"
-                        label-position="top"            
-                        size="small"                
-                    >
-                        <el-form-item label="Nombre del Esquema">
-                            <el-input
-                                placeholder="Ingresa el nombre del esquema"
-                                :value="itemSchema.name"                    
-                                @input="val => onParamChange({name: val})"
-                                @change="updateRoutes"                  
-                            ></el-input>
-                        </el-form-item>
 
-                        <el-form-item label="Categoría">
-                            <query-select
-                                store="schemas/categories"
-                                :multiple="false"
-                                :value="[itemSchema.category]"
-                                @change="val => onParamChange({
-                                    category: val.length ? val[0] : null
-                                })"
-                            ></query-select>
-                        </el-form-item>
-
-                        <el-form-item label="Imagen">
-                            <image-uploader
-                                store="schemas/images"
-                                :multiple="false"
-                                button="block"
-                                display="labels"
-                                :value="schemaImage"
-                                @input="val => onParamChange({
-                                    image: val.length ? val[0] : null
-                                })"
-                            ></image-uploader>
-                        </el-form-item>
-                    </el-form>
-                </el-tab-pane>
-                <el-tab-pane label="Secciones" name="sections">
-                    <schema-sections :schema-id="schemaId">
-                    </schema-sections>
-                </el-tab-pane>
-            </el-tabs>
-            
+            <schema-editor-tabs 
+                v-else 
+                :schema-id="schemaId" 
+                class="mt-3"
+            ></schema-editor-tabs>            
         </template>
 
         <template v-else-if="panel === 'field'">
-            <boolean-field-editor 
-                v-if="curField.type === 'boolean'"
+            <component
+                :is="curField.type + '-field-editor'"
                 :field-id="curField.id"
-            ></boolean-field-editor>
-            <choices-field-editor 
-                v-else-if="curField.type === 'choices'"
-                :field-id="curField.id"
-            ></choices-field-editor>
-            <date-field-editor 
-                v-else-if="curField.type === 'datetime'"
-                :field-id="curField.id"
-            ></date-field-editor>
-            <file-field-editor 
-                v-else-if="curField.type === 'file'"
-                :field-id="curField.id"
-            ></file-field-editor>
-            <images-field-editor
-                v-else-if="curField.type === 'image'"
-                :field-id="curField.id"
-            ></images-field-editor>
-            <item-field-editor
-                v-else-if="curField.type === 'item'"
-                :field-id="curField.id"
-            ></item-field-editor>
-            <number-field-editor 
-                v-else-if="curField.type === 'number'"
-                :field-id="curField.id"
-            ></number-field-editor>
-            <text-field-editor 
-                v-else-if="curField.type === 'text'"
-                :long="true"
-                :field-id="curField.id"
-            ></text-field-editor>
+            ></component>
         </template>
     </template>
 </split-view>
@@ -197,22 +177,22 @@
 
 import ToolButton from '../blocks/ToolButton';
 import SplitView from '../blocks/SplitView';
-import QuerySelect from '../blocks/QuerySelect';
 import BooleanFieldEditor from '../fields-booleans/BooleanFieldEditor';
 import ChoicesFieldEditor from '../fields-choices/ChoicesFieldEditor';
-import DateFieldEditor from '../fields-dates/DateFieldEditor';
+import DatetimeFieldEditor from '../fields-dates/DatetimeFieldEditor';
 import FileFieldEditor from '../fields-files/FileFieldEditor';
-import ImagesFieldEditor from '../fields-images/ImagesFieldEditor';
+import ImageFieldEditor from '../fields-images/ImageFieldEditor';
 import ItemFieldEditor from '../fields-items/ItemFieldEditor';
 import NumberFieldEditor from '../fields-numbers/NumberFieldEditor';
 import TextFieldEditor from '../fields-texts/TextFieldEditor';
-import ImageUploader from '../blocks/ImageUploader';
 import SchemaAddField from './SchemaAddField';
-import SchemaSections from './SchemaSections';
 import SchemaFieldsView from './SchemaFieldsView';
+import SchemaEditorTabs from './SchemaEditorTabs';
 import params from '../../params';
-import config from '../../config';
+import { itemSchemaModel } from '../../store/item-schemas/models';
 import { loadSchema } from '../loader';
+import { Message } from 'element-ui';
+import config from '../../config';
 
 export default {
     name: 'SchemaEditor',
@@ -220,19 +200,17 @@ export default {
     components: {
         ToolButton,
         SplitView,
-        QuerySelect,
         BooleanFieldEditor,
         ChoicesFieldEditor,
-        DateFieldEditor,
-        ImagesFieldEditor,
+        DatetimeFieldEditor,
+        ImageFieldEditor,
         ItemFieldEditor,
         FileFieldEditor,
         NumberFieldEditor,
         TextFieldEditor,
-        ImageUploader,
         SchemaAddField,
-        SchemaSections,
-        SchemaFieldsView
+        SchemaFieldsView,
+        SchemaEditorTabs
     },
 
     props: {
@@ -244,12 +222,15 @@ export default {
 
     data() {
         return {
-            routeFrom: {},
             showDeleteDialog: false,
             editorTab: 'schema',
             section: undefined,
             loading: false,
-            booting: false
+            booting: false,
+            cloningField: false,
+            cloningSchema: false,
+            cloneName: '',
+            showCloneDialog: false
         };
     },
 
@@ -312,11 +293,15 @@ export default {
         });
     },
 
-    beforeRouteEnter(to, from, next) {
-        next(vm => {
-            vm.routeFrom = from;
-        });
-    },
+/*     watch: {
+        '$route': function(newId, oldId) {
+            console.log(newId);
+            console.log(oldId);
+            if (newId !== oldId) {
+                this.created();
+            }
+        }
+    }, */
 
     methods: {
 
@@ -358,33 +343,97 @@ export default {
             }
         },
 
+        onRequestCloneSchema() {
+            this.showCloneDialog = true;
+            this.cloneName = this.itemSchema.name;
+            this.cloneProgress = 0;
+        },
+
+        onConfirmCloneSchema() {
+            if (!this.cloneName) {
+                return;
+            }
+
+            this.cloningSchema = true;
+            const schema = this.itemSchema;
+            const data = itemSchemaModel.create();
+
+            data.name = this.cloneName;
+            data.category = schema.category;
+            data.image = schema.image;
+            data.config = schema.config;
+
+            this.$store.dispatch('schemas/itemSchemas/createItem', {
+                persist: true,
+                item: data
+            }).then(({ id }) => {
+                const proms = [];
+                this.sortedFields.forEach((field, index) => {
+                    proms.push(this.cloneField(field, {itemSchema: id}));
+                });
+                Promise.all(proms).then(() => {
+                    this.$router.push({
+                        name: 'SchemaEditor', 
+                        params: { schemaId: id }
+                    });
+                }).catch((error) => {                    
+                    Message.error(config.errorMessage);
+                    console.error(error);
+                }).finally(() => {
+                    this.cloningSchema = false;
+                    this.showCloneDialog = false;
+                });                
+            }).catch((error) => {
+                this.cloningSchema = false;
+                this.showCloneDialog = false;
+                Message.error(config.errorMessage);
+                console.error(error);
+            });
+        },
+
         onCloneField() {
             if (this.curField) {
+                this.cloningField = true;
                 const order = this.curField.order - 1;
-                const param = params[this.curField.type];
-                let field = {...this.curField, order: order};
-                
-                if (param.type === 'choices') {
-                    field = {
-                        ...field, 
-                        order: order, 
-                        default: [], 
-                        choices: []
-                    };
-                }
+                this.cloneField(
+                    this.curField, {order: order}
+                ).then(() => {
+                    this.cloningField = false;
+                    this.$store.dispatch(
+                        'schemas/itemSchemas/retrieveItem', this.schemaId
+                    );
+                }).catch(() => {
+                    this.cloningField = false;
+                    Message.error('No se ha podido ejecutar la operación');
+                });               
+            }
+        },
 
+        cloneField(field, data) {
+            const param = params[field.type];
+            const clonedField = field;
+
+            field = {...field, ...data};
+                
+            if (param.type === 'choices') {
+                field = {
+                    ...field,
+                    default: [], 
+                    choices: []
+                };
+            }
+
+            return new Promise((resolve, reject) => {
                 this.$store.dispatch(
                     `schemas/${param.fieldStore}/createItem`, {
                         item: field, 
                         persist: true
-                }).then(({ id }) => {
-                    this.$store.dispatch(
-                        'schemas/itemSchemas/retrieveItem', this.schemaId
-                    );
+                    }
+                ).then(({ id }) => {
                     if (param.type === 'choices') {
                         const state = this.$store.state.schemas.choices.items;
                         const proms = [];
-                        this.curField.choices.forEach(choiceId => {
+                        clonedField.choices.forEach(choiceId => {
                             const choice = state[choiceId];
                             if (choice) {
                                 proms.push(this.$store.dispatch(
@@ -396,19 +445,19 @@ export default {
                             }
                         });
                         Promise.all(proms).then(() => {
-                            this.$store.dispatch(
+                            resolve();
+                            /* this.$store.dispatch(
                                 `schemas/${param.fieldStore}/retrieveItem`, id
-                            );
+                            ); */
+                        }).catch(error => {
+                            reject(error);
                         });
+                    } else {
+                        resolve();
                     }
-                });               
-            }
-        },
-
-        onParamChange(data) {
-            this.$store.dispatch('schemas/itemSchemas/updateItem', {
-                persist: false,
-                item: {id: this.schemaId, ...data}
+                }).catch(error => {
+                    reject(error);
+                });
             });
         },
 
@@ -443,12 +492,6 @@ export default {
             });
         },
 
-        updateRoutes() {
-            if (config.buildNavTree) {
-                this.$store.dispatch('schemas/navigation/buildRoutes');
-            }            
-        },
-
         onDeleteField() {
             if (this.curField) {
                 const param = params[this.curField.type];
@@ -466,10 +509,12 @@ export default {
 
         onDeleteSchema() {
             if (this.itemSchema) {
+                this.showDeleteDialog = false;
+                this.booting = true;                
                 this.$store.dispatch(
                     'schemas/itemSchemas/destroyItem', this.schemaId
                 ).then(() => {
-                    this.$router.replace(this.routeFrom);
+                    this.$router.push({name: 'SchemasIndex'});
                 });
             }
         }

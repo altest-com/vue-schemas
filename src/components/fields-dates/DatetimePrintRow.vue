@@ -1,13 +1,16 @@
 <template>
 
 <component class="date-print-row" :is="node">
-    <template v-if="view === 'table'">
+    <div v-if="layout === 'blocks' || layout === 'fluid'">
+        <div class="label">{{ label }}</div>
+        <div class="value">{{ display }}</div>
+    </div>
+    <template v-if="layout === 'vtable'">
         <td class="label">{{ label }}</td>
         <td class="value">{{ display }}</td>
     </template>
-    <template v-else-if="view === 'list'">
-        <div class="label">{{ label }}</div>
-        <div class="value">{{ display }}</div>
+    <template v-if="layout === 'htable'">
+        {{ display }}
     </template>
 </component>
 

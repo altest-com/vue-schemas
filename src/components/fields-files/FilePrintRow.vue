@@ -1,29 +1,26 @@
 <template>
 
 <component class="file-print-row" :is="node">
-    <template v-if="view === 'table'">
+    <div v-if="layout === 'blocks' || layout === 'fluid'">
+        <div class="label">{{ label }}</div>
+        <div class="value">
+            <a v-for="file in files" :key="file.id" :href="file.url"> 
+                {{ file.name }}
+            </a>
+        </div>
+    </div>
+    <template v-if="layout === 'vtable'">
         <td class="label">{{ label }}</td>
         <td class="value">
-            <a 
-                v-for="file in files"
-                :key="file.id"
-                :href="file.url"
-            > 
+            <a v-for="file in files" :key="file.id" :href="file.url"> 
                 {{ file.name }}
             </a>
         </td>
     </template>
-    <template v-else-if="view === 'list'">
-        <div class="label">{{ label }}</div>
-        <div class="value">
-            <a 
-                v-for="file in files"
-                :key="file.id"
-                :href="file.url"
-            > 
-                {{ file.name }}
-            </a>
-        </div>
+    <template v-if="layout === 'htable'">
+        <a v-for="file in files" :key="file.id" :href="file.url"> 
+            {{ file.name }}
+        </a>
     </template>
 </component>
 

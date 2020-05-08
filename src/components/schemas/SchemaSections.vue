@@ -56,9 +56,43 @@
             addLabel="Añadir sección"
             listLabel="Secciones"
             :value="config.sections"
+            :delete="false"
             @input="val => onParamChange({sections: val})"
+            @remove="onRequestDelete"
         ></ab-editable-list>
     </el-form>
+
+    <el-dialog
+        title="Confirmar"
+        :visible.sync="showDeleteDialog"
+        width="400px"
+    >
+        <p class="mb-2">
+            Selecciona que elementos deseas eliminar
+        </p>
+        <el-radio-group v-model="fullDelete">
+            <el-radio :label="false">Eliminar solo la sección seleccionada</el-radio>
+            <el-radio :label="true">Eliminar la sección y sus campos</el-radio>
+        </el-radio-group>
+        <span slot="footer" class="dialog-footer">
+            <el-button 
+                icon="el-icon-close"
+                size="small"
+                class="mr-2"
+                @click="showDeleteDialog = false"
+            >
+                Cancelar
+            </el-button>
+            <el-button 
+                type="danger" 
+                icon="el-icon-delete" 
+                size="small"
+                @click="onConfirmDelete"
+            >
+                Confirmar
+            </el-button>
+        </span>
+    </el-dialog>
 </div>
 
 </template>
@@ -67,6 +101,7 @@
 
 import AbEditableList from '../blocks/AbEditableList';
 import { configModel } from '../../store/item-schemas/models';
+import params from '../../params';
 
 const sectionTypes = Object.keys(
     configModel.SECTIONS_CHOICES
@@ -100,7 +135,10 @@ export default {
         return {
             newSection: '',
             sectionTypes: sectionTypes,
-            tabsPositions: tabsPositions
+            tabsPositions: tabsPositions,
+            showDeleteDialog: false,
+            fullDelete: false,
+            sectionId: null
         };
     },
 
@@ -109,30 +147,80 @@ export default {
             return this.schema.config;
         },
         schema() {
-            this.$store.dispatch('schemas/itemSchemas/getItem', this.schemaId);
             return this.$store.state.schemas.itemSchemas.items[this.schemaId];
         }
     },
 
     methods: {
         onParamChange(data) {
-            this.$store.dispatch('schemas/itemSchemas/updateItem', {
-                persist: false,
+            return this.$store.dispatch('schemas/itemSchemas/updateItem', {
+                persist: true,
                 item: {
                     id: this.schemaId, 
                     config: {...this.config, ...data}
                 }
             });
         },
-        onSectionsChange(sections) {            
-            const sectionsId = this.config.sections.map(({ id }) => id);
-            if (
-                sections.length !== sectionsId.length || 
-                !sections.every(({ id }) => sectionsId.includes(id))
-            ) {
-                this.$emit();
-            }
+        onSectionsChange(sections) {
             this.onParamChange({sections: sections});
+        },
+
+        onRequestDelete(sectionId) {
+            this.showDeleteDialog = true;
+            this.sectionId = sectionId;
+        },
+
+        onConfirmDelete() {
+            this.showDeleteDialog = false;
+            if (this.fullDelete) {
+                this.deleteFields(this.sectionId).then(() => {
+                    this.deleteSection(this.sectionId);
+                });
+            } else {
+                this.deleteSection(this.sectionId);
+            }                       
+        },
+
+        deleteSection(sectionId) {
+            this.onParamChange({
+                sections: this.config.sections.filter(
+                    section => section.id !== this.sectionId
+                )
+            }).then(() => {
+                this.$store.dispatch(
+                    'schemas/itemSchemas/retrieveItem', this.schemaId
+                ); 
+            });
+        },
+
+        deleteFields(sectionId) {
+            const state = this.$store.state.schemas;
+            const proms = [];
+            const curFieldKey = this.$store.state.schemas.itemSchemas.fieldKey;           
+
+            return new Promise((resolve, reject) => {
+                Object.keys(params).forEach(key => {
+                    const store = params[key].fieldStore;
+                    this.schema[store].forEach(fieldId => {
+                        const field = state[store].items[fieldId];
+                        if (field && field.config.section === sectionId) {
+                            if ((field.type + field.id) === curFieldKey) {
+                                this.$store.dispatch(
+                                    'schemas/itemSchemas/setField', null
+                                );
+                            }
+                            proms.push(this.$store.dispatch(
+                                `schemas/${store}/destroyItem`, fieldId
+                            ));
+                        }
+                    });
+                });
+                Promise.all(proms).then(() => {
+                    resolve();
+                }).catch((error) => {
+                    reject(error);
+                });
+            });
         }
     }    
 };
