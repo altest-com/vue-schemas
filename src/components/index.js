@@ -8,7 +8,7 @@ import ChoicesValueCell from './fields-choices/ChoicesValueCell';
 import ChoicesValueEditor from './fields-choices/ChoicesValueEditor';
 import DatetimeFieldEditor from './fields-dates/DatetimeFieldEditor';
 import DateFieldView from './fields-dates/DateFieldView';
-import DateValueCell from './fields-dates/DateValueCell';
+import DatetimeValueCell from './fields-dates/DatetimeValueCell';
 import DateValueEditor from './fields-dates/DateValueEditor';
 import FileFieldEditor from './fields-files/FileFieldEditor';
 import FileFieldView from './fields-files/FileFieldView';
@@ -16,7 +16,7 @@ import FileValueCell from './fields-files/FileValueCell';
 import FileValueEditor from './fields-files/FileValueEditor';
 import ImageFieldEditor from './fields-images/ImageFieldEditor';
 import ImagesFieldView from './fields-images/ImagesFieldView';
-import ImagesValueCell from './fields-images/ImagesValueCell';
+import ImageValueCell from './fields-images/ImageValueCell';
 import ImagesValueEditor from './fields-images/ImagesValueEditor';
 import ItemFieldEditor from './fields-items/ItemFieldEditor';
 import ItemFieldView from './fields-items/ItemFieldView';
@@ -70,7 +70,7 @@ export {
     ChoicesValueEditor,
     DatetimeFieldEditor,
     DateFieldView,
-    DateValueCell,
+    DatetimeValueCell,
     DateValueEditor,
     FileFieldEditor,
     FileFieldView,
@@ -78,7 +78,7 @@ export {
     FileValueEditor,
     ImageFieldEditor,
     ImagesFieldView,
-    ImagesValueCell,
+    ImageValueCell,
     ImagesValueEditor,
     ItemFieldEditor,
     ItemFieldView,

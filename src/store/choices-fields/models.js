@@ -90,9 +90,10 @@ class ChoicesFieldModel extends FieldModel {
 
 const choicesFieldModel = new ChoicesFieldModel();
 
+Object.freeze(choicesFieldModel);
+Object.freeze(choicesConfigModel);
+
 export {
-    ChoicesFieldModel,
     choicesFieldModel,
-    ChoicesConfigModel,
     choicesConfigModel
 };

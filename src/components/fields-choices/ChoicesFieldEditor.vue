@@ -28,6 +28,13 @@
                 </el-select>
             </el-form-item>
 
+            <el-form-item label="Representar relación" class="switch">
+                <el-switch
+                    :value="field.represent"                    
+                    @change="val => onParamChange({represent: val})"
+                ></el-switch>
+            </el-form-item>
+
             <el-form-item label="Selección múltiple" class="switch">
                 <el-switch
                     :value="field.config.multi"           
@@ -139,8 +146,7 @@ export default {
     methods: {
         updateField() {
             this.$store.dispatch(
-                'schemas/choicesFields/retrieveItem', 
-                this.fieldId
+                'schemas/choicesFields/retrieveItem', { id: this.fieldId }
             );
         },
         onAddChoice(name) {

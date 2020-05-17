@@ -9,14 +9,14 @@ const imagesApi = new Api(
     config.apiPath + 'images/'
 );
 
+Object.freeze(imagesApi);
+
 const state = {
     MODEL: imageModel,
     API: imagesApi,
-    FILTER: null,
     items: {},
     count: 0,
     pageNumber: 0,
-    filter: null,
     pageSize: PAGE_SIZE,
     loading: false,
     getting: {}

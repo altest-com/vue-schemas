@@ -10,14 +10,16 @@ class BooleanValueModel extends ValueModel {
         value: {
             writable: true,
             api: 'value',
-            type: Boolean
+            type: Boolean,
+            default: false
         }
     })
 }
 
 const booleanValueModel = new BooleanValueModel();
 
+Object.freeze(booleanValueModel);
+
 export {
-    BooleanValueModel,
     booleanValueModel
 };

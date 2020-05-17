@@ -9,15 +9,15 @@ const textValuesApi = new Api(
     config.apiPath + 'text-values/'
 );
 
+Object.freeze(textValuesApi);
+
 const state = {
     MODEL: textValueModel,
     API: textValuesApi,
-    FILTER: null,
     items: {},
     sortId: [],
     count: 0,
     pageNumber: 0,
-    filter: null,
     pageSize: PAGE_SIZE,
     loading: false,
     getting: {}

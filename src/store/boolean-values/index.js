@@ -9,15 +9,15 @@ const booleanValuesApi = new Api(
     config.apiPath + 'boolean-values/'
 );
 
+Object.freeze(booleanValuesApi);
+
 const state = {
     MODEL: booleanValueModel,
     API: booleanValuesApi,
-    FILTER: null,
     items: {},
     sortId: [],
     count: 0,
     pageNumber: 0,
-    filter: null,
     pageSize: PAGE_SIZE,
     loading: false,
     getting: {}

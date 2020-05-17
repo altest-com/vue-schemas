@@ -9,14 +9,14 @@ const categoriesApi = new Api(
     config.apiPath + 'categories/'
 );
 
+Object.freeze(categoriesApi);
+
 const state = {
     MODEL: categoryModel,
     API: categoriesApi,
-    FILTER: null,
     items: {},
     count: 0,
     pageNumber: 0,
-    filter: null,
     pageSize: PAGE_SIZE,
     loading: false,
     getting: {}

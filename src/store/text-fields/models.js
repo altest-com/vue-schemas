@@ -19,6 +19,8 @@ class TextConfigModel extends ConfigModel {
 
 const textConfigModel = new TextConfigModel();
 
+Object.freeze(TextConfigModel);
+
 class TextFieldModel extends FieldModel {
     props = Object.assign({}, fieldModel.props, {
         type: {
@@ -37,6 +39,18 @@ class TextFieldModel extends FieldModel {
             api: 'default',
             type: String
         },
+        query: {
+            writable: true,
+            api: 'query',
+            type: Boolean,
+            default: false
+        },
+        represent: {
+            writable: true,
+            api: 'represent',
+            type: Boolean,
+            default: false
+        },
         config: {
             writable: true,
             api: 'config',
@@ -49,9 +63,9 @@ class TextFieldModel extends FieldModel {
 
 const textFieldModel = new TextFieldModel();
 
+Object.freeze(textFieldModel);
+
 export {
-    TextFieldModel,
     textFieldModel,
-    TextConfigModel,
     textConfigModel
 };

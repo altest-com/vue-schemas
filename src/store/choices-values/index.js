@@ -9,15 +9,15 @@ const choicesValueApi = new Api(
     config.apiPath + 'choices-values/'
 );
 
+Object.freeze(choicesValueApi);
+
 const state = {
     MODEL: choicesValueModel,
     API: choicesValueApi,
-    FILTER: null,
     items: {},
     sortId: [],
     count: 0,
     pageNumber: 0,
-    filter: null,
     pageSize: PAGE_SIZE,
     loading: false,
     getting: {}

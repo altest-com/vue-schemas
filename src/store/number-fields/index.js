@@ -9,15 +9,15 @@ const numberFieldApi = new Api(
     config.apiPath + 'number-fields/'
 );
 
+Object.freeze(numberFieldApi);
+
 const state = {
     MODEL: numberFieldModel,
     API: numberFieldApi,
-    FILTER: null,
     items: {},
     sortId: [],
     count: 0,
     pageNumber: 0,
-    filter: null,
     pageSize: PAGE_SIZE,
     loading: false,
     getting: {}

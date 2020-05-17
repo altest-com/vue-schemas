@@ -19,7 +19,8 @@ class ItemValueModel extends ValueModel {
 
 const itemValueModel = new ItemValueModel();
 
+Object.freeze(itemValueModel);
+
 export {
-    ItemValueModel,
     itemValueModel
 };

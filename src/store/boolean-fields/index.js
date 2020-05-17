@@ -9,15 +9,15 @@ const booleanFieldApi = new Api(
     config.apiPath + 'boolean-fields/'
 );
 
+Object.freeze(booleanFieldApi);
+
 const state = {
     MODEL: booleanFieldModel,
     API: booleanFieldApi,
-    FILTER: null,
     items: {},
     sortId: [],
     count: 0,
     pageNumber: 0,
-    filter: null,
     pageSize: PAGE_SIZE,
     loading: false,
     getting: {}

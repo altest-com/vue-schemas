@@ -1,47 +1,36 @@
 <template>
 
-<td 
-    v-if="value" 
-    class="number-value-cell" 
-    :style="{'max-width': '64px'}"
->
-    <div class="cell">{{ display }}</div>
+<td class="number-value-cell">
+    {{ display }}
 </td>
 
 </template>
 
 <script>
 
+import ValueCellMixin from '../fields/ValueCellMixin';
+
 export default {
     name: 'NumberValueCell',
     
-    props: {
-        valueId: {
-            type: [Number, String],
-            required: true
-        }
+    mixins: [ValueCellMixin],
+
+    data() {
+        return {
+            valueStore: 'numberValues',
+            fieldStore: 'numberFields'
+        };
     },
 
     computed: {
-        value() {
-            this.$store.dispatch('schemas/numberValues/getItem', this.valueId);
-            return this.$store.state.schemas.numberValues.items[this.valueId];        
-        },
-        field() {
-            const fieldId = this.value.field;
-            this.$store.dispatch('schemas/numberFields/getItem', fieldId);
-            return this.$store.state.schemas.numberFields.items[fieldId];        
-        },
         display() {
             const value = this.value.value;
             if (value) {
-                return this.field.config.integer ? value.toFixed(0) : value;
+                const integer = this.field.config.integer;
+                return integer ? value.toFixed(0) : value;
             }
             return '';
         }
     }
 };
 </script>
-
-<style lang="scss">
-</style>

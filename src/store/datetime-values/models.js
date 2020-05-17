@@ -17,7 +17,8 @@ class DateTimeValueModel extends ValueModel {
 
 const dateTimeValueModel = new DateTimeValueModel();
 
+Object.freeze(dateTimeValueModel);
+
 export {
-    DateTimeValueModel,
     dateTimeValueModel
 };

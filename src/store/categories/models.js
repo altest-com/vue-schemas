@@ -27,6 +27,8 @@ class CategoryModel extends Model {
 
 const categoryModel = new CategoryModel();
 
+Object.freeze(categoryModel);
+
 export {
     CategoryModel,
     categoryModel

@@ -9,15 +9,15 @@ const imagesValuesApi = new Api(
     config.apiPath + 'images-values/'
 );
 
+Object.freeze(imagesValuesApi);
+
 const state = {
     MODEL: imagesValueModel,
     API: imagesValuesApi,
-    FILTER: null,
     items: {},
     sortId: [],
     count: 0,
     pageNumber: 0,
-    filter: null,
     pageSize: PAGE_SIZE,
     loading: false,
     getting: {}

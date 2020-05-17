@@ -9,15 +9,15 @@ const dateTimeValuesApi = new Api(
     config.apiPath + 'datetime-values/'
 );
 
+Object.freeze(dateTimeValuesApi);
+
 const state = {
     MODEL: dateTimeValueModel,
     API: dateTimeValuesApi,
-    FILTER: null,
     items: {},
     sortId: [],
     count: 0,
     pageNumber: 0,
-    filter: null,
     pageSize: PAGE_SIZE,
     loading: false,
     getting: {}

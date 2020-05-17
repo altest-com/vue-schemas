@@ -6,7 +6,7 @@
     :class="{'focus': focus}" 
     @click="$emit('click')"
 >
-    <el-card>
+    <el-card shadow="never">
         <div class="content">
             <img class="image" :src="imageUrl" alt="">       
             <div class="name"> {{ itemSchema.name }} </div>
@@ -99,7 +99,7 @@ export default {
         cursor: pointer;
     }
     &.focus .el-card {
-        background-color: #ecf6ed;
+        box-shadow: 0 2px 12px 0 rgba(0,0,0,0.1);
     }
     .content {
         display: flex;

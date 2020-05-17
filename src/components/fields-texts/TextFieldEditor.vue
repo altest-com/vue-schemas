@@ -22,6 +22,20 @@
                     @input="val => onConfigChange({rows: val})"           
                 ></el-input-number>
             </el-form-item>
+
+            <el-form-item label="Representar relación" class="switch">
+                <el-switch
+                    :value="field.represent"                    
+                    @change="val => onParamChange({represent: val})"
+                ></el-switch>
+            </el-form-item>
+
+            <el-form-item label="Consultar campo" class="switch">
+                <el-switch
+                    :value="field.query"                    
+                    @change="val => onParamChange({query: val})"
+                ></el-switch>
+            </el-form-item>
             
             <el-form-item label="Valor por defecto">
                 <el-input

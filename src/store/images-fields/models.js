@@ -88,9 +88,10 @@ class ImagesFieldModel extends FieldModel {
 
 const imagesFieldModel = new ImagesFieldModel();
 
+Object.freeze(imagesFieldModel);
+Object.freeze(imageConfigModel);
+
 export {
-    ImagesFieldModel,
     imagesFieldModel,
-    ImageConfigModel,
     imageConfigModel
 };

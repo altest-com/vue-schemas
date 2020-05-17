@@ -17,7 +17,8 @@ class TextValueModel extends ValueModel {
 
 const textValueModel = new TextValueModel();
 
+Object.freeze(textValueModel);
+
 export {
-    TextValueModel,
     textValueModel
 };

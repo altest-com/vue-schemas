@@ -9,6 +9,8 @@ const itemSchemaApi = new Api(
     config.apiPath + 'item-schemas/'
 );
 
+Object.freeze(itemSchemaApi);
+
 const state = {
     MODEL: itemSchemaModel,
     API: itemSchemaApi,

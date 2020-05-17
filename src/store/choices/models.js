@@ -22,7 +22,8 @@ class ChoiceModel extends Model {
 
 const choiceModel = new ChoiceModel();
 
+Object.freeze(choiceModel);
+
 export {
-    ChoiceModel,
     choiceModel
 };

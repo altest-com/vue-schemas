@@ -32,7 +32,8 @@ class ImageModel extends Model {
 
 const imageModel = new ImageModel();
 
+Object.freeze(imageModel);
+
 export {
-    ImageModel,
     imageModel
 };

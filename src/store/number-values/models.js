@@ -20,7 +20,8 @@ class NumberValueModel extends ValueModel {
 
 const numberValueModel = new NumberValueModel();
 
+Object.freeze(numberValueModel);
+
 export {
-    NumberValueModel,
     numberValueModel
 };

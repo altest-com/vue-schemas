@@ -9,15 +9,15 @@ const fileValuesApi = new Api(
     config.apiPath + 'file-values/'
 );
 
+Object.freeze(fileValuesApi);
+
 const state = {
     MODEL: fileValueModel,
     API: fileValuesApi,
-    FILTER: null,
     items: {},
     sortId: [],
     count: 0,
     pageNumber: 0,
-    filter: null,
     pageSize: PAGE_SIZE,
     loading: false,
     getting: {}

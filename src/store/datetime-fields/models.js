@@ -74,9 +74,10 @@ class DateTimeFieldModel extends FieldModel {
 
 const dateTimeFieldModel = new DateTimeFieldModel();
 
+Object.freeze(dateTimeFieldModel);
+Object.freeze(dateConfigModel);
+
 export {
-    DateTimeFieldModel,
     dateTimeFieldModel,
-    DateConfigModel,
     dateConfigModel
 };

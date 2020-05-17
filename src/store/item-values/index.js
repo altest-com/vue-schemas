@@ -9,15 +9,15 @@ const itemValuesApi = new Api(
     config.apiPath + 'item-values/'
 );
 
+Object.freeze(itemValuesApi);
+
 const state = {
     MODEL: itemValueModel,
     API: itemValuesApi,
-    FILTER: null,
     items: {},
     sortId: [],
     count: 0,
     pageNumber: 0,
-    filter: null,
     pageSize: PAGE_SIZE,
     loading: false,
     getting: {}

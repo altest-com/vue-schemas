@@ -2,14 +2,11 @@
 
 <div v-if="value && field" class="item-value-editor">
     <el-form-item v-if="!editNested" :label="label">
-        <query-select
-            :multiple="field.multi"
-            :disabled="!hasRelated"
-            store="schemas/items"
-            :params="params"
+        <item-query
+            :field-id="field.id"
             :value="value.value"
             @change="val => onParamChange({value: val})"
-        ></query-select>        
+        />     
     </el-form-item>
     <template v-else>
         <label v-if="label" class="el-form-item__label">{{ label }}</label>
@@ -80,7 +77,7 @@
 
 <script>
 
-import QuerySelect from '../blocks/QuerySelect';
+import ItemQuery from './ItemQuery';
 import ValueEditorMixin from '../fields/ValueEditorMixin';
 import AbStepViews from '../blocks/AbStepViews';
 import Empty from '../blocks/Empty';
@@ -89,7 +86,7 @@ export default {
     name: 'ItemValueEditor',
 
     components: {
-        QuerySelect,
+        ItemQuery,
         Empty,
         AbStepViews,
         ItemEditor: () => import('../items/ItemEditor')
@@ -163,7 +160,7 @@ export default {
             if (!value) {
                 try {
                     value = await this.$store.dispatch(
-                        'schemas/itemValues/retrieveItem', this.valueId
+                        'schemas/itemValues/retrieveItem', { id: this.valueId }
                     );
                 } catch (error) {
                     console.log('Error retrieving item value');
@@ -180,7 +177,7 @@ export default {
             if (!field) {
                 try {
                     field = await this.$store.dispatch(
-                        'schemas/itemFields/retrieveItem', value.field
+                        'schemas/itemFields/retrieveItem', { id: value.field }
                     );
                 } catch (error) {
                     console.log('Error retrieving item value field');

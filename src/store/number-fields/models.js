@@ -49,6 +49,8 @@ class NumberConfigModel extends ConfigModel {
 
 const numberConfigModel = new NumberConfigModel();
 
+Object.freeze(numberConfigModel);
+
 class NumberFieldModel extends FieldModel {
     props = Object.assign({}, fieldModel.props, {
         type: {
@@ -95,9 +97,9 @@ class NumberFieldModel extends FieldModel {
 
 const numberFieldModel = new NumberFieldModel();
 
+Object.freeze(numberFieldModel);
+
 export {
-    NumberFieldModel,
     numberFieldModel,
-    NumberConfigModel,
     numberConfigModel
 };

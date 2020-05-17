@@ -97,6 +97,8 @@ class ConfigModel extends Model {
 
 const configModel = new ConfigModel();
 
+Object.freeze(configModel);
+
 class ItemSchemaModel extends Model {
     props = {
         id: {
@@ -195,6 +197,8 @@ class ItemSchemaModel extends Model {
 
 const itemSchemaModel = new ItemSchemaModel();
 
+Object.freeze(itemSchemaModel);
+
 const reverse = arr => {
     const arr_ = [];
     arr.forEach(val => {
@@ -246,10 +250,10 @@ class SchemasFilter extends Model {
 
 const schemasFilter = new SchemasFilter();
 
+Object.freeze(schemasFilter);
+
 export {
     itemSchemaModel,
-    ItemSchemaModel,
-    SchemasFilter,
     schemasFilter,
     configModel
 };

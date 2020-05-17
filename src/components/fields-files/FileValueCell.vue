@@ -1,10 +1,6 @@
 <template>
 
-<td 
-    v-if="value" 
-    class="file-value-cell" 
-    :style="{'max-width': '200px'}"
->
+<td class="file-value-cell">
     <div v-if="files.length" class="cell">
         <a :href="files[0].url"> {{ files[0].name }} </a>
     </div>
@@ -14,26 +10,25 @@
 
 <script>
 
+import ValueCellMixin from '../fields/ValueCellMixin';
+
 export default {
     name: 'FileValueCell',
-    
-    props: {
-        valueId: {
-            type: [Number, String],
-            required: true
-        }
+
+    mixins: [ValueCellMixin],
+
+    data() {
+        return {
+            valueStore: 'fileValues'
+        };
     },
 
     computed: {
-        value() {
-            this.$store.dispatch('schemas/fileValues/getItem', this.valueId);
-            return this.$store.state.schemas.fileValues.items[this.valueId];          
-        },
         files() {
             const files = [];
+            const storeFiles = this.$store.state.schemas.files.items;
             this.value.value.forEach(fileId => {
-                this.$store.dispatch('schemas/files/getItem', fileId);
-                const file = this.$store.state.schemas.files.items[fileId];
+                const file = storeFiles[fileId];
                 if (file) {
                     files.push({
                         id: file.id,

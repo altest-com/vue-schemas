@@ -9,15 +9,15 @@ const numberValuesApi = new Api(
     config.apiPath + 'number-values/'
 );
 
+Object.freeze(numberValuesApi);
+
 const state = {
     MODEL: numberValueModel,
     API: numberValuesApi,
-    FILTER: null,
     items: {},
     sortId: [],
     count: 0,
     pageNumber: 0,
-    filter: null,
     pageSize: PAGE_SIZE,
     loading: false,
     getting: {}

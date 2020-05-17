@@ -2,14 +2,9 @@
 
 <div v-if="field" class="item-field-view">
     <el-form-item v-if="!isNested" :label="label">
-        <query-select
-            :multiple="field.multi"
-            :disabled="!hasRelated"
-            store="schemas/items"
-            :params="params"
-            :value="field.default"
-        ></query-select>                
+        <item-query :field-id="fieldId" :value="field.default" />              
     </el-form-item>
+
     <template v-else>
         <label v-if="label" class="el-form-item__label nest">
             {{ label }}
@@ -54,14 +49,14 @@
 <script>
 
 import Empty from '../blocks/Empty';
-import QuerySelect from '../blocks/QuerySelect';
 import FieldViewMixin from '../fields/FieldViewMixin';
+import ItemQuery from './ItemQuery';
 
 export default {
     name: 'ItemFieldView',
 
     components: {
-        QuerySelect,
+        ItemQuery,
         Empty,
         ItemSchemaView: () => import('../items/ItemSchemaView')
     },

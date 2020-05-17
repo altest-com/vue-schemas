@@ -19,7 +19,8 @@ class FileValueModel extends ValueModel {
 
 const fileValueModel = new FileValueModel();
 
+Object.freeze(fileValueModel);
+
 export {
-    FileValueModel,
     fileValueModel
 };

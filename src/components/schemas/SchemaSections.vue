@@ -188,7 +188,7 @@ export default {
                 )
             }).then(() => {
                 this.$store.dispatch(
-                    'schemas/itemSchemas/retrieveItem', this.schemaId
+                    'schemas/itemSchemas/retrieveItem', { id: this.schemaId }
                 ); 
             });
         },

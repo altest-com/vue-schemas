@@ -18,7 +18,8 @@ class ChoicesValueModel extends ValueModel {
 
 const choicesValueModel = new ChoicesValueModel();
 
+Object.freeze(choicesValueModel);
+
 export {
-    ChoicesValueModel,
     choicesValueModel
 };

@@ -69,13 +69,20 @@ class ItemModel extends Model {
             writable: false,
             api: 'updated_at',
             type: Date
+        },
+        represent: {
+            writable: false,
+            api: 'represent',
+            many: true,
+            type: Number
         }
     }
 }
 
 const itemModel = new ItemModel();
 
+Object.freeze(itemModel);
+
 export {
-    itemModel,
-    ItemModel
+    itemModel
 };

@@ -9,14 +9,14 @@ const filesApi = new Api(
     config.apiPath + 'files/'
 );
 
+Object.freeze(filesApi);
+
 const state = {
     MODEL: fileModel,
     API: filesApi,
-    FILTER: null,
     items: {},
     count: 0,
     pageNumber: 0,
-    filter: null,
     pageSize: PAGE_SIZE,
     loading: false,
     getting: {}

@@ -1,49 +1,62 @@
 <template>
 
-<td 
-    v-if="value" 
-    class="item-value-cell" 
-    :style="{'max-width': '100px'}"
->
-    <div class="cell">{{ display }}</div>
+<td class="item-value-cell">
+    {{ display }}
 </td>
 
 </template>
 
 <script>
 
+import ValueCellMixin from '../fields/ValueCellMixin';
+import ItemLabelMixin from './ItemLabelMixin';
+
 export default {
     name: 'ItemValueCell',
     
-    props: {
-        valueId: {
-            type: [Number, String],
-            required: true
-        }
+    mixins: [ValueCellMixin, ItemLabelMixin],
+
+    data() {
+        return {
+            valueStore: 'itemValues',
+            display: ' '
+        };
     },
 
     computed: {
-        value() {
-            this.$store.dispatch('schemas/itemValues/getItem', this.valueId);
-            return this.$store.state.schemas.itemValues.items[this.valueId];          
-        },
-        display() {
+    },
+
+    watch: {
+        'value.value': function() {
+            this.update();
+        }
+    },
+
+    created() {
+        this.update();
+    },
+
+    methods: {
+        async update() {
             const items = [];
-            this.value.value.forEach(itemId => {
-                this.$store.dispatch('schemas/items/getItem', itemId);
-                const item = this.$store.state.schemas.items.items[itemId]; 
+            const storeItems = this.$store.state.schemas.items.items;
+            for (const itemId of this.value.value) {
+                let item = storeItems[itemId]; 
+                if (!item) {
+                    item = await this.$store.dispatch(
+                        'schemas/items/retrieveItem', {
+                            id: itemId,
+                            fields: 'id,represent'
+                        }
+                    );
+                }
                 if (item) {
-                    items.push({
-                        id: item.id,
-                        name: item.name
-                    });
+                    const itemLabel = await this.labelItem(item);
+                    items.push(itemLabel);
                 }                
-            });
-            return items.map(item => item.name).join(', ');
+            }
+            this.display = items.map(item => item.label).join(', ');
         }
     }
 };
 </script>
-
-<style lang="scss">
-</style>

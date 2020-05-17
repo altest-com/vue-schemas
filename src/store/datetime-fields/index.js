@@ -9,15 +9,15 @@ const dateTimeFieldApi = new Api(
     config.apiPath + 'datetime-fields/'
 );
 
+Object.freeze(dateTimeFieldApi);
+
 const state = {
     MODEL: dateTimeFieldModel,
     API: dateTimeFieldApi,
-    FILTER: null,
     items: {},
     sortId: [],
     count: 0,
     pageNumber: 0,
-    filter: null,
     pageSize: PAGE_SIZE,
     loading: false,
     getting: {}

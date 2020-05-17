@@ -86,9 +86,9 @@ class ItemFieldModel extends FieldModel {
 
 const itemFieldModel = new ItemFieldModel();
 
+Object.freeze(itemFieldModel);
+
 export {
-    ItemFieldModel,
     itemFieldModel,
-    itemConfigModel,
-    ItemConfigModel
+    itemConfigModel
 };

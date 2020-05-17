@@ -12,12 +12,11 @@ export function loadFields(store, schema) {
         const path = params[key].fieldStore;
         const fieldsId = schema[path];
         if (fieldsId.length) {
-            const fetch = fieldsId.some(fieldId => !state[path][fieldId]);
+            const fetch = fieldsId.some(fieldId => !state[path].items[fieldId]);
             if (fetch) {               
                 const fp = store.dispatch(
                     `schemas/${path}/fetchItems`, {
-                        'item_schema_id__in': [schema.id],
-                        'limit': null
+                        'item_schema_id__in': [schema.id]
                     }
                 );
                 proms.push(fp);
@@ -64,7 +63,7 @@ export function loadSchema(store, schemaId) {
                 });
             } else {
                 store.dispatch(
-                    'schemas/itemSchemas/retrieveItem', schemaId
+                    'schemas/itemSchemas/retrieveItem', { id: schemaId }
                 ).then(schema => {
                     loadFields(store, schema).then(() => {
                         resolve(schema);
@@ -89,20 +88,17 @@ export function loadSchema(store, schemaId) {
 export function loadValues(store, item) {
     const proms = [];
     const state = store.state.schemas; 
-
     Object.keys(params).forEach(key => {
         const path = params[key].valueStore;
         const valuesId = item[path];
         if (item[path].length) {
-            const fetch = valuesId.some(id => !state[path][id]);
+            const fetch = valuesId.some(id => !state[path].items[id]);
             if (fetch) {
-                const vp = store.dispatch(
+                proms.push(store.dispatch(
                     `schemas/${path}/fetchItems`, {
-                        'item_id__in': [item.id],
-                        'limit': null
+                        'item_id__in': [item.id]
                     }
-                );
-                proms.push(vp);
+                ));
             }
         }            
     });
@@ -136,7 +132,7 @@ export function loadItem(store, itemId) {
                 });
             } else {
                 store.dispatch(
-                    'schemas/items/retrieveItem', itemId
+                    'schemas/items/retrieveItem', { id: itemId }
                 ).then(item => {
                     loadValues(store, item).then(() => {
                         resolve(item);

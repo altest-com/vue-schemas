@@ -19,7 +19,8 @@ class ImagesValueModel extends ValueModel {
 
 const imagesValueModel = new ImagesValueModel();
 
+Object.freeze(imagesValueModel);
+
 export {
-    ImagesValueModel,
     imagesValueModel
 };

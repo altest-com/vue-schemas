@@ -1,37 +1,32 @@
 <template>
 
-<td 
-    v-if="value" 
-    class="choices-value-cell" 
-    :style="{'max-width': '100px'}"
->
-    <div class="cell">{{ display }}</div>
+<td class="choices-value-cell">
+    {{ display }}
 </td>
 
 </template>
 
 <script>
 
+import ValueCellMixin from '../fields/ValueCellMixin';
+
 export default {
     name: 'ChoicesValueCell',
-    
-    props: {
-        valueId: {
-            type: [Number, String],
-            required: true
-        }
+
+    mixins: [ValueCellMixin],
+
+    data() {
+        return {
+            valueStore: 'choicesValues'
+        };
     },
 
     computed: {
-        value() {
-            this.$store.dispatch('schemas/choicesValues/getItem', this.valueId);
-            return this.$store.state.schemas.choicesValues.items[this.valueId];          
-        },
         choices() {
             const choices = [];
+            const storeChoices = this.$store.state.schemas.choices.items;
             this.value.value.forEach(choiceId => {
-                /* this.$store.dispatch('schemas/choices/getItem', choiceId); */
-                const choice = this.$store.state.schemas.choices.items[choiceId];
+                const choice = storeChoices[choiceId];
                 if (choice) {
                     choices.push(choice.name);
                 }
@@ -39,7 +34,7 @@ export default {
             return choices;
         },
         display() {
-            return this.choices.join(',');
+            return this.choices.join(' • ');
         }
     }
 };

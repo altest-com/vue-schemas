@@ -46,7 +46,8 @@ class BooleanFieldModel extends FieldModel {
         default: {
             writable: true,
             api: 'default',
-            type: Boolean
+            type: Boolean,
+            default: false
         },
         config: {
             writable: true,
@@ -60,9 +61,10 @@ class BooleanFieldModel extends FieldModel {
 
 const booleanFieldModel = new BooleanFieldModel();
 
+Object.freeze(booleanConfigModel);
+Object.freeze(booleanFieldModel);
+
 export {
-    BooleanFieldModel,
     booleanFieldModel,
-    BooleanConfigModel,
     booleanConfigModel
 };

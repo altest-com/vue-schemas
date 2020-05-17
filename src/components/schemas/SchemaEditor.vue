@@ -335,7 +335,7 @@ export default {
                     persist: true
                 }).then(({id, type}) => {
                     this.$store.dispatch(
-                        'schemas/itemSchemas/retrieveItem', this.schemaId
+                        'schemas/itemSchemas/retrieveItem', { id: this.schemaId }
                     );
                 });
             } else {
@@ -400,7 +400,7 @@ export default {
                 ).then(() => {
                     this.cloningField = false;
                     this.$store.dispatch(
-                        'schemas/itemSchemas/retrieveItem', this.schemaId
+                        'schemas/itemSchemas/retrieveItem', { id: this.schemaId }
                     );
                 }).catch(() => {
                     this.cloningField = false;
@@ -501,7 +501,7 @@ export default {
                     `schemas/${param.fieldStore}/destroyItem`, fieldId
                 ).then(() => {                    
                     this.$store.dispatch(
-                        'schemas/itemSchemas/retrieveItem', this.schemaId
+                        'schemas/itemSchemas/retrieveItem', { id: this.schemaId }
                     );
                 });
             }

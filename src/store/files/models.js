@@ -22,7 +22,8 @@ class FileModel extends Model {
 
 const fileModel = new FileModel();
 
+Object.freeze(fileModel);
+
 export {
-    FileModel,
     fileModel
 };

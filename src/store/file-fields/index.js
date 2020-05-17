@@ -9,15 +9,15 @@ const fileFieldsApi = new Api(
     config.apiPath + 'file-fields/'
 );
 
+Object.freeze(fileFieldsApi);
+
 const state = {
     MODEL: fileFieldModel,
     API: fileFieldsApi,
-    FILTER: null,
     items: {},
     sortId: [],
     count: 0,
     pageNumber: 0,
-    filter: null,
     pageSize: PAGE_SIZE,
     loading: false,
     getting: {}

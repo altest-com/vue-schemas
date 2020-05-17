@@ -1,33 +1,29 @@
 <template>
 
-<td 
-    v-if="booleanValue" 
-    class="boolean-value-cell"
->
-    <div class="cell">{{ display }}</div>
+<td v-if="value" class="boolean-value-cell">
+    {{ display }}
 </td>
 
 </template>
 
 <script>
 
+import ValueCellMixin from '../fields/ValueCellMixin';
+
 export default {
     name: 'BooleanValueCell',
-    
-    props: {
-        valueId: {
-            type: [Number, String],
-            required: true
-        }
+
+    mixins: [ValueCellMixin],
+
+    data() {
+        return {
+            valueStore: 'booleanValues'
+        };
     },
 
     computed: {
-        booleanValue() {
-            this.$store.dispatch('schemas/booleanValues/getItem', this.valueId);
-            return this.$store.state.schemas.booleanValues.items[this.valueId];          
-        },
         display() {
-            return this.booleanValue.value ? 'Sí' : 'No';
+            return this.value.value ? 'Sí' : 'No';
         }
     }
 };

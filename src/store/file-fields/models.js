@@ -30,7 +30,8 @@ class FileFieldModel extends FieldModel {
 
 const fileFieldModel = new FileFieldModel();
 
+Object.freeze(fileFieldModel);
+
 export {
-    FileFieldModel,
     fileFieldModel
 };

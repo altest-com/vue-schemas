@@ -9,15 +9,15 @@ const itemFieldsApi = new Api(
     config.apiPath + 'item-fields/'
 );
 
+Object.freeze(itemFieldsApi);
+
 const state = {
     MODEL: itemFieldModel,
     API: itemFieldsApi,
-    FILTER: null,
     items: {},
     sortId: [],
     count: 0,
     pageNumber: 0,
-    filter: null,
     pageSize: PAGE_SIZE,
     loading: false,
     getting: {}

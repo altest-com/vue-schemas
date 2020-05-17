@@ -9,15 +9,15 @@ const textFieldApi = new Api(
     config.apiPath + 'text-fields/'
 );
 
+Object.freeze(textFieldApi);
+
 const state = {
     MODEL: textFieldModel,
     API: textFieldApi,
-    FILTER: null,
     items: {},
     sortId: [],
     count: 0,
     pageNumber: 0,
-    filter: null,
     pageSize: PAGE_SIZE,
     loading: false,
     getting: {}

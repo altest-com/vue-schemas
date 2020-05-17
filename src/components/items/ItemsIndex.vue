@@ -10,10 +10,17 @@
             @create="onCreateItem"
         ></list-header>
 
+        <div 
+            v-if="booting" 
+            v-loading="booting"
+            :style="{'height': '400px'}"
+        ></div>
+
         <items-list-wrapper
+            v-else
             :schema-id="schemaId"
-            :columns="visibleCols"
             :focus-id="curItemId"
+            :headers="showHeaders"
             @update:focus-id="onItemListChange"
         ></items-list-wrapper>
 
@@ -42,18 +49,19 @@
         </el-dialog>
 
         <el-dialog
+            v-if="!booting"
             title="Seleccionar columnas"
-            :visible.sync="visibleColsDialog"
+            :visible.sync="showHeadersDialog"
             width="400px"
             center
         >
-            <el-checkbox-group v-model="visibleCols" class="visible-cols">
+            <el-checkbox-group v-model="showKeys" class="visible-cols">
                 <el-checkbox 
-                    v-for="column in columns" 
-                    :key="column.value"
-                    :label="column.value"
+                    v-for="header in headers" 
+                    :key="header.key"
+                    :label="header.key"
                 >
-                    {{ column.label }}
+                    {{ header.label }}
                 </el-checkbox>
             </el-checkbox-group>
             <div slot="footer" class="flex-row je dialog-footer">
@@ -62,7 +70,7 @@
                     icon="el-icon-check"
                     :disabled="loading"
                     size="small"
-                    @click="visibleColsDialog = false"
+                    @click="showHeadersDialog = false"
                 >
                     Aceptar
                 </el-button>
@@ -78,7 +86,7 @@
                     class="ml-1"
                     tooltip="Seleccionar columnas" 
                     icon="el-icon-tickets"
-                    @click="visibleColsDialog = true"
+                    @click="showHeadersDialog = true"
                 ></tool-button>
                 <tool-button
                     class="ml-1"
@@ -127,9 +135,10 @@
     </template>
 
     <template v-slot:side-content>
-        <!-- <items-filter 
-            v-if="panel === 'search'"
-        ></items-filter> -->
+        <items-filter 
+            v-if="panel === 'search' && !booting"
+            :schema-id="schemaId"
+        ></items-filter>
 
         <!-- <item-details
             v-else-if="panel === 'details'"
@@ -153,10 +162,14 @@ import SplitView from '../blocks/SplitView';
 import ToolButton from '../blocks/ToolButton';
 import ListHeader from '../blocks/ListHeader';
 import ItemsListWrapper from './ItemsListWrapper';
-/* import ItemDetails from './ItemDetails';
-import ItemsFilter from './ItemsFilter'; */
+/* import ItemDetails from './ItemDetails'; */
+import ItemsFilter from './ItemsFilter';
 import ItemEditor from './ItemEditor';
 import params from '../../params';
+
+const nColumnsShow = 4;
+
+import { loadSchema } from '../loader';
 
 const newItemId = 'newId';
 
@@ -168,7 +181,7 @@ export default {
         ToolButton,
         ListHeader,
         ItemsListWrapper,
-        /* ItemsFilter, */
+        ItemsFilter,
         /* ItemDetails, */
         ItemEditor
     },
@@ -186,9 +199,10 @@ export default {
             panel: 'search',
             curItemId: null,
             showDeleteDialog: false,
-            visibleColsDialog: false,
-            visibleCols: [],
-            loading: false
+            showHeadersDialog: false,
+            showKeys: [],
+            loading: false,
+            booting: false
         };
     },
 
@@ -201,41 +215,50 @@ export default {
         },
         curItem() {
             if (this.curItemId !== null) {
-                this.$store.dispatch('schemas/items/getItem', this.curItemId);
                 return this.$store.state.schemas.items.items[this.curItemId];
             }
             return null;
         },
         schema() {
-            this.$store.dispatch('schemas/itemSchemas/getItem', this.schemaId);
             return this.$store.state.schemas.itemSchemas.items[this.schemaId];
         },
-        columns() {
-            const columns = [];
-
+        showHeaders() {
+            return this.showKeys.length ? 
+                this.headers.filter(({ key }) => this.showKeys.includes(key)) : 
+                this.headers.slice(0, nColumnsShow);
+        },
+        headers() {
+            const headers = [];
+            const state = this.$store.state.schemas;
             Object.keys(params).forEach(key => {
                 const store = params[key].fieldStore;
+                const storeFields = state[store].items;
                 this.schema[store].forEach(fieldId => {
-                    this.$store.dispatch(`schemas/${store}/getItem`, fieldId);
-                    const field = this.$store.state.schemas[store].items[fieldId];
+                    const field = storeFields[fieldId];
                     if (field) {
-                        columns.push({
+                        headers.push({
                             label: field.name,
-                            value: `${field.type}-${field.id}`,
+                            key: `${field.type}-${field.id}`,
                             order: field.order
                         });
                     }
                 });
             });
 
-            return Array.from(columns).sort(
+            return Array.from(headers).sort(
                 (fa, fb) => (fa.order > fb.order) ? 1 : -1
             );
         }
     },
 
     created() {
-        this.$store.dispatch('schemas/items/fetchItems', {'schema': this.schemaId});
+        this.$store.dispatch('schemas/items/fetchItems', {
+            'schema_id': this.schemaId
+        });
+        this.booting = true;
+        loadSchema(this.$store, this.schemaId).then(() => {
+            this.booting = false;
+        });
     },
 
     methods: {

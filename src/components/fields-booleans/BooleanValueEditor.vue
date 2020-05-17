@@ -3,15 +3,15 @@
 <div v-if="value && field" class="boolean-value-editor">
     <el-form-item 
         :label="label" 
-        :class="{'switch': field.config.displayAs === 'switch'}"
+        :class="{'switch': displayAs === 'switch'}"
     >
         <el-switch
-            v-if="field.config.displayAs === 'switch'"
+            v-if="displayAs === 'switch'"
             :value="value.value"
             @input="val => onParamChange({value: val})"
         ></el-switch>
         <el-radio-group 
-            v-else-if="field.config.displayAs === 'radio'"
+            v-else-if="displayAs === 'radio'"
             :value="value.value"
             @input="val => onParamChange({value: val})"
         >
@@ -19,7 +19,7 @@
             <el-radio :label="false">No</el-radio>
         </el-radio-group>
         <el-radio-group
-            v-else-if="field.config.displayAs === 'buttons'"
+            v-else-if="displayAs === 'buttons'"
             :value="value.value"
             @input="val => onParamChange({value: val})"
         >
@@ -49,6 +49,12 @@ export default {
             fieldStore: 'booleanFields',
             valueStore: 'booleanValues'
         };
+    },
+
+    computed: {
+        displayAs() {
+            return this.field.config.displayAs;
+        }
     }
 };
 </script>

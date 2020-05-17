@@ -21,21 +21,18 @@
                     @change="val => onParamChange({
                         targetSchema: val.length ? val[0] : null
                     })"
-                ></query-select>
+                />
             </el-form-item>
 
             <el-form-item label="Valor por defecto">
-                <query-select
-                    :disabled="!hasRelated"
-                    :multiple="field.multi"
-                    store="schemas/items"
-                    :params="params"
+                <item-query
+                    :field-id="fieldId"
                     :value="field.default"
                     @change="val => onParamChange({default: val})"
-                ></query-select>
+                />
             </el-form-item>
 
-            <el-form-item label="Múltiples Objetos">
+            <el-form-item label="Múltiples Objetos" class="switch">
                 <el-switch
                     :value="field.multi"           
                     @change="val => onParamChange({multi: val})"
@@ -82,6 +79,7 @@
 
 import QuerySelect from '../blocks/QuerySelect';
 import FieldEditor from '../fields/FieldEditor';
+import ItemQuery from './ItemQuery';
 import FieldEditorMixin from '../fields/FieldEditorMixin';
 import { itemConfigModel as config } from '../../store/item-fields/models';
 
@@ -104,7 +102,8 @@ export default {
 
     components: {
         FieldEditor,
-        QuerySelect
+        QuerySelect,
+        ItemQuery
     },
 
     mixins: [FieldEditorMixin],

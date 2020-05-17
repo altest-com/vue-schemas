@@ -1,32 +1,27 @@
 <template>
 
-<td 
-    v-if="value" 
-    class="text-value-cell" 
-    :style="{'max-width': '200px'}"
->
-    <div class="cell">{{ display }}</div>
+<td class="text-value-cell">
+    {{ display }}
 </td>
 
 </template>
 
 <script>
 
+import ValueCellMixin from '../fields/ValueCellMixin';
+
 export default {
     name: 'TextValueCell',
     
-    props: {
-        valueId: {
-            type: [Number, String],
-            required: true
-        }
+    mixins: [ValueCellMixin],
+
+    data() {
+        return {
+            valueStore: 'textValues'
+        };
     },
 
     computed: {
-        value() {
-            this.$store.dispatch('schemas/textValues/getItem', this.valueId);
-            return this.$store.state.schemas.textValues.items[this.valueId];        
-        },
         display() {
             return this.value.value;
         }

@@ -1,68 +1,22 @@
 <template>
 
-<div v-if="schema" class="items-list">
+<div class="items-list">
     <el-card v-if="items.length" shadow="never" class="mt-5">
-        <table class="items-table">
-            <tr class="header-row">                
-                <th v-for="header in tableHeader" :key="header.key">
-                    <div class="cell"> {{ header.label }} </div>
+        <ab-flex-table>
+            <tr>                
+                <th v-for="header in headers" :key="header.key">
+                    {{ header.label }}
                 </th>
             </tr>
-            <tr 
-                v-for="item in tableData" 
-                :key="item.id" 
-                class="data-row"
-                :class="{'focus': item.id === focusId}"
+            <items-table-row 
+                v-for="item in listItems" 
+                :key="item.id"
+                :item-id="item.id"
+                :headers="headers"
+                :focus="item.id === focusId"
                 @click="onRowClick(item.id)"
-            > 
-                <template v-for="value in item.values">
-                    <template v-if="value">
-                        <boolean-value-cell 
-                            v-if="value.type === 'boolean'"
-                            :key="value.key"
-                            :value-id="value.id"
-                        ></boolean-value-cell>
-                        <choices-value-cell 
-                            v-else-if="value.type === 'choices'"
-                            :key="value.key"
-                            :value-id="value.id"
-                        ></choices-value-cell>
-                        <date-value-cell 
-                            v-else-if="value.type === 'datetime'"
-                            :key="value.key"
-                            :value-id="value.id"
-                        ></date-value-cell>
-                        <file-value-cell 
-                            v-else-if="value.type === 'file'"
-                            :key="value.key"
-                            :value-id="value.id"
-                        ></file-value-cell>
-                        <images-value-cell
-                            v-else-if="value.type === 'image'"
-                            :key="value.key"
-                            :value-id="value.id"
-                        ></images-value-cell>
-                        <item-value-cell
-                            v-else-if="value.type === 'item'"
-                            :key="value.key"
-                            :value-id="value.id"
-                        ></item-value-cell>
-                        <number-value-cell 
-                            v-else-if="value.type === 'number'"
-                            :key="value.key"
-                            :value-id="value.id"
-                        ></number-value-cell>
-                        <text-value-cell 
-                            v-else-if="value.type === 'text'"
-                            :key="value.key"
-                            :long="true"
-                            :value-id="value.id"
-                        ></text-value-cell> 
-                    </template>
-                    <td v-else :key="value"></td>               
-                </template>
-            </tr>
-        </table>
+            />
+        </ab-flex-table>
     </el-card>
 
     <empty
@@ -93,32 +47,16 @@
 
 import { mapGetters } from 'vuex';
 import Empty from '../blocks/Empty';
-import params from '../../params';
-
-import BooleanValueCell from '../fields-booleans/BooleanValueCell';
-import ChoicesValueCell from '../fields-choices/ChoicesValueCell';
-import DateValueCell from '../fields-dates/DateValueCell';
-import FileValueCell from '../fields-files/FileValueCell';
-import ImagesValueCell from '../fields-images/ImagesValueCell';
-import ItemValueCell from '../fields-items/ItemValueCell';
-import NumberValueCell from '../fields-numbers/NumberValueCell';
-import TextValueCell from '../fields-texts/TextValueCell';
-
-const nColumnsShow = 4;
+import AbFlexTable from '../blocks/AbFlexTable';
+import ItemsTableRow from './ItemsTableRow';
 
 export default {
     name: 'ItemsListWrapper',
 
     components: {
         Empty,
-        BooleanValueCell,
-        ChoicesValueCell,
-        DateValueCell,
-        FileValueCell,
-        ImagesValueCell,
-        ItemValueCell,
-        NumberValueCell,
-        TextValueCell
+        ItemsTableRow,
+        AbFlexTable
     },
 
     props: {
@@ -130,7 +68,7 @@ export default {
             type: [Number, String],
             required: true
         },
-        columns: {
+        headers: {
             type: Array,
             default: () => []
         }
@@ -154,49 +92,9 @@ export default {
         pageSize() {
             return this.$store.state.schemas.items.pageSize;
         },
-        schema() {
-            this.$store.dispatch('schemas/itemSchemas/getItem', this.schemaId);
-            return this.$store.state.schemas.itemSchemas.items[this.schemaId];
-        },
-        tableHeader() {
-            const headers = [];
-            Object.keys(params).forEach(key => {
-                const store = params[key].fieldStore;
-                this.schema[store].forEach(fieldId => {
-                    this.$store.dispatch(`schemas/${store}/getItem`, fieldId);
-                    const field = this.$store.state.schemas[store].items[fieldId];
-                    if (field) {
-                        const key = `${field.type}-${field.id}`;
-                        if (this.columns.length === 0 || 
-                            this.columns.includes(key)
-                        ) {
-                            headers.push({
-                                order: field.order,
-                                label: field.name,
-                                type: field.type,
-                                key: `${field.type}-${field.id}`
-                            });
-                        }
-                    }
-                });
-            });
-
-            const headers_ = Array.from(headers).sort(
-                (fa, fb) => (fa.order > fb.order) ? 1 : -1
-            );
-
-            return this.columns.length === 0 ? 
-                headers_.slice(0, nColumnsShow) : headers_;
-        },
-        tableData() {
-            const data = [];
-            this.items.forEach(item => {
-                data.push({
-                    id: item.id, 
-                    values: this.getItemData(item)
-                });
-            });
-            return data;
+        listItems() {
+            // eslint-disable-next-line eqeqeq
+            return this.items.filter(item => item.schema == this.schemaId);
         }
     },
 
@@ -213,69 +111,8 @@ export default {
         onRowClick(itemId) {
             const focusId = itemId === this.focusId ? null : itemId;
             this.$emit('update:focus-id', focusId);
-        },
-        getItemData(item) {
-            const data = {};
-            data.id = item.id;
-            Object.keys(params).forEach(key => {
-                const store = params[key].valueStore;
-                item[store].forEach(valueId => {
-                    this.$store.dispatch(`schemas/${store}/getItem`, valueId);
-                    const value = this.$store.state.schemas[store].items[valueId];
-                    if (value) {
-                        const key = `${value.type}-${value.field}`;
-                        data[key] = {
-                            id: value.id,
-                            type: value.type,
-                            key: key
-                        };
-                    }
-                });
-            });
-            return this.tableHeader.map(({key}) => data[key]);
         }
     }
 };
 </script>
 
-<style lang="scss">
-
-.items-list {
-    .items-table {
-        border-collapse: collapse;
-        width: 100%;
-        th, td {
-            text-align: left;
-            border-bottom: 1px solid #ebeef5;
-            padding: 12px 0;
-            min-width: 0;
-            box-sizing: border-box;
-            text-overflow: ellipsis;
-            vertical-align: middle;
-            position: relative;
-            text-align: left;
-        }
-        td {
-            transition: background-color .25s ease;
-        }
-        tr.data-row:hover {
-            background-color:#f5f7fa;
-            cursor: pointer;
-        }
-        tr.data-row.focus {
-            background-color:#ecf5ff;
-        }
-        .cell {
-            box-sizing: border-box;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            word-break: break-all;
-            line-height: 23px;
-            padding-left: 10px;
-            padding-right: 10px;
-        }
-    }
-}
-
-</style>
