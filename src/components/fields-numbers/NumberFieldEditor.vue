@@ -31,13 +31,6 @@
                 ></el-input-number>
             </el-form-item>
 
-            <el-form-item label="Representar relación" class="switch">
-                <el-switch
-                    :value="field.represent"                    
-                    @change="val => onParamChange({represent: val})"
-                ></el-switch>
-            </el-form-item>
-
             <el-form-item label="Mostrar como">
                 <el-select
                     :value="field.config.displayAs"

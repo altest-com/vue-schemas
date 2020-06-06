@@ -5,7 +5,7 @@
         v-if="booting" 
         v-loading="true" 
         :style="{'height': '400px'}"
-    ></div>
+    />
 
     <template v-else-if="config.sections.length">
         <div v-for="section in config.sections" :key="section.id">
@@ -17,7 +17,7 @@
                 :layout="config.printLayout"
                 :level="level"
                 :labels="config.printLabels"
-            ></item-print-values>
+            />
         </div>
     </template>
 
@@ -27,7 +27,7 @@
             :layout="config.printLayout"
             :labels="config.printLabels"
             :level="level"
-        ></item-print-values>
+        />
     </template>
 </div>
 
@@ -170,6 +170,6 @@ export default {
 
 <style lang="scss">
 
-@import '../../styles/print.scss';
+@import'../../styles/print.scss';
 
 </style>

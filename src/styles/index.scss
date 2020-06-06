@@ -1,0 +1,15 @@
+.el-button.back 
+{
+    padding: 0;
+    i {
+        margin-top: 3px;
+        font-weight: 700;
+        font-size: 18px;
+        color: #606266;
+    }
+    &:hover, &:active {
+        i {
+            color: #409eff; 
+        }
+    }
+}

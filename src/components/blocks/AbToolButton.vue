@@ -1,5 +1,5 @@
 <template>
-    <div class="tool-button" :class="{active: active}">
+    <div class="ab-tool-button" :class="{active: active}">
         <el-tooltip
             v-if="tooltip"
             class="item" 
@@ -14,7 +14,7 @@
                 :icon="icon"
                 :disabled="disabled"
                 @click="onButtonClick"
-            ></el-button>
+            />
         </el-tooltip>
 
         <el-button
@@ -24,13 +24,13 @@
             :icon="icon"
             :disabled="disabled"
             @click="onButtonClick"
-        ></el-button>
+        />
     </div>
 </template>
 
 <script>
 export default {
-    name: 'ToolButton',
+    name: 'AbToolButton',
 
     props: {
         tooltip: {
@@ -65,7 +65,7 @@ export default {
 
 <style lang="scss">
 
-.tool-button {
+.ab-tool-button {
     .el-button {
         border: none;
         border-radius: 8px;

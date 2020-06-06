@@ -13,12 +13,12 @@
             size="small"
         >
             <el-form-item label="Archivo por defecto">
-                <file-uploader
+                <ab-file-uploader
                     store="schemas/files"
                     :multiple="field.multi"
                     :value="field.default"                    
                     @input="val => onParamChange({default: val})"
-                ></file-uploader>
+                />
             </el-form-item>
 
             <el-form-item label="Múltiples archivos" class="mr-2">
@@ -42,7 +42,7 @@
 
 <script>
 
-import FileUploader from '../blocks/FileUploader';
+import AbFileUploader from '../blocks/AbFileUploader';
 import FieldEditor from '../fields/FieldEditor';
 import FieldEditorMixin from '../fields/FieldEditorMixin';
 
@@ -50,7 +50,7 @@ export default {
     name: 'FileFieldEditor',
 
     components: {
-        FileUploader,
+        AbFileUploader,
         FieldEditor
     },
 

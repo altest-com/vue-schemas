@@ -2,12 +2,12 @@
 
 <div v-if="field" class="file-field-view">
     <el-form-item :label="label">
-        <file-uploader
+        <ab-file-uploader
             store="schemas/files"
             :disabled="true"
             :multiple="field.multi"
             :value="field.default"
-        ></file-uploader>
+        />
     </el-form-item>
 </div>
 
@@ -15,14 +15,14 @@
 
 <script>
 
-import FileUploader from '../blocks/FileUploader';
+import AbFileUploader from '../blocks/AbFileUploader';
 import FieldViewMixin from '../fields/FieldViewMixin';
 
 export default {
     name: 'FileFieldView',
 
     components: {
-        FileUploader
+        AbFileUploader
     },
 
     mixins: [FieldViewMixin],

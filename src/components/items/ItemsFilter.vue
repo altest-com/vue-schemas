@@ -28,12 +28,12 @@
 import BooleanValueFilter from '../fields-booleans/BooleanValueFilter';
 import ChoicesValueFilter from '../fields-choices/ChoicesValueFilter';
 import DatetimeValueFilter from '../fields-dates/DatetimeValueFilter';
-/* import ItemValueFilter from '../fields-items/ItemValueFilter'; */
+/* ItemValueFilter from '../fields-items/ItemValueFilter'; */
 import NumberValueFilter from '../fields-numbers/NumberValueFilter';
 import TextValueFilter from '../fields-texts/TextValueFilter';
 
 import params from '../../params';
-/* import { loadSchema } from '../loader'; */
+/* { loadSchema } from '../loader'; */
 
 export default {
     name: 'ItemsFilter',

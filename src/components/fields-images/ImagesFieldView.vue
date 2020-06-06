@@ -2,15 +2,17 @@
 
 <div v-if="field" class="images-field-view">
     <el-form-item :label="label">
-        <image-uploader
+        <ab-image-uploader
             store="schemas/images"
-            :multiple="field.multi"
+            :multiple="true"
+            :upload-url="uploadUrl"
+            :upload-headers="uploadHeaders"
             :disabled="true"
             :height="field.config.height"
             :button="field.config.buttonType"
             :display="field.config.displayAs"
             :value="field.default"
-        ></image-uploader>
+        />
     </el-form-item>
 </div>
 
@@ -18,21 +20,25 @@
 
 <script>
 
-import ImageUploader from '../blocks/ImageUploader';
+import AbImageUploader from '../blocks/AbImageUploader';
 import FieldViewMixin from '../fields/FieldViewMixin';
+import { imagesApi } from "../../store/images";
+
 
 export default {
     name: 'ImagesFieldView',
 
     components: {
-        ImageUploader
+        AbImageUploader
     },
 
     mixins: [FieldViewMixin],
 
     data() {
         return {
-            fieldStore: 'imagesFields'
+            fieldStore: 'imagesFields',
+            uploadUrl: imagesApi.getUrl(),
+            uploadHeaders: imagesApi.getHeader(),
         };
     }
 };

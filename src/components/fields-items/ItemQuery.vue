@@ -106,7 +106,7 @@ export default {
         initChoices() {
             this.cachedChoices = {};
             this.updateValueChoices();
-            if (this.preload > 0 & this.schema) {
+            if (this.preload > 0 && this.schema) {
                 this.preloadData();
             }
         },

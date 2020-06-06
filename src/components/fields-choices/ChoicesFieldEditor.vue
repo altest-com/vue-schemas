@@ -28,13 +28,6 @@
                 </el-select>
             </el-form-item>
 
-            <el-form-item label="Representar relación" class="switch">
-                <el-switch
-                    :value="field.represent"                    
-                    @change="val => onParamChange({represent: val})"
-                ></el-switch>
-            </el-form-item>
-
             <el-form-item label="Selección múltiple" class="switch">
                 <el-switch
                     :value="field.config.multi"           

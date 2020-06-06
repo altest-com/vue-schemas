@@ -1,19 +1,19 @@
 <template>
 
-<split-view class="schemas-index">
+<ab-split-view class="schemas-index">
     <template v-slot:main>
-        <list-header 
+        <ab-list-header 
             class="mb-4"
             :show-count="schemas.length"
             :total-count="schemasCount"
             add-text="Nuevo Esquema"
             @create="onCreateSchema"
-        ></list-header>
+        />
 
         <schemas-list
             :focus-id="curSchemaId"
             @update:focus-id="onSchemaListChange"
-        ></schemas-list>
+        />
 
         <el-dialog
             title="Advertencia"
@@ -44,37 +44,37 @@
         <template v-if="panel === 'search'">
             <div class="text-lg text-w6">Búsqueda</div>
             <div class="flex-row">
-                <tool-button
+                <ab-tool-button
                     class="mr-1"
                     tooltip="Restablecer filtro" 
                     icon="el-icon-refresh"
                     @click="onClearFilter"
-                ></tool-button>
-                <tool-button
+                />
+                <ab-tool-button
                     tooltip="Exportar esquemas" 
                     :icon="exporting ? 'el-icon-loading' : 'el-icon-download'"
                     @click="onExport"
-                ></tool-button>
+                />
             </div>
         </template>
 
         <template v-else-if="panel === 'details'">
             <div class="text-lg text-w6">Detalles</div>
             <div class="flex-row">
-                <tool-button
+                <ab-tool-button
                     class="ml-1"
                     tooltip="Editar esquema" 
                     icon="el-icon-edit"
                     :disabled="!canEdit"
                     @click="onSchemaEdit"
-                ></tool-button>
-                <tool-button
+                />
+                <ab-tool-button
                     class="ml-1"
                     tooltip="Eliminar esquema" 
                     icon="el-icon-delete"
                     :disabled="!canEdit"
                     @click="showDeleteDialog = true"
-                ></tool-button>
+                />
             </div>                    
         </template>
     </template>
@@ -89,19 +89,20 @@
             :schema-id="curSchemaId"
         ></schema-details> -->
     </template>
-</split-view>
+</ab-split-view>
 
 </template>
 
 <script>
+
 import { mapGetters } from 'vuex';
-import ToolButton from '../blocks/ToolButton';
+import AbToolButton from '../blocks/AbToolButton';
 import { itemSchemaModel } from '../../store/item-schemas/models';
-import ListHeader from '../blocks/ListHeader';
-import SplitView from '../blocks/SplitView';
+import AbListHeader from '../blocks/AbListHeader';
+import AbSplitView from '../blocks/AbSplitView';
 import SchemasList from './SchemasList';
 import SchemasFilter from './SchemasFilter';
-/* import SchemaDetails from './components/SchemaDetails'; */
+/* SchemaDetails from './components/SchemaDetails'; */
 
 const newSchemaId = 'newId';
 
@@ -109,10 +110,10 @@ export default {
     name: 'SchemasIndex',
 
     components: {
-        SplitView,
-        ListHeader,
+        AbSplitView,
+        AbListHeader,
         SchemasList,
-        ToolButton,
+        AbToolButton,
         SchemasFilter/* ,        
         SchemaDetails  */       
     },

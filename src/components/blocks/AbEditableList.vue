@@ -18,7 +18,7 @@
                     icon="el-icon-plus"
                     class="ml-2"
                     @click="onAddItem"
-                ></el-button>
+                />
             </div>                
         </el-form-item>
 
@@ -53,13 +53,13 @@
                             size="small"
                             class="mr-2"
                             @click="onRemoveItem(item)"
-                        ></el-button>
+                        />
                         <el-button 
                             type="text" 
                             icon="el-icon-edit" 
                             size="small"
                             @click="onStartEdit(item)"
-                        ></el-button>
+                        />
                     </div>
                 </div>
             </div>           

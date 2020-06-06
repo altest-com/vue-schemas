@@ -6,11 +6,11 @@
         size="small"
     >
         <el-form-item label="Ordenar por">
-            <order-select
+            <ab-order-select
                 :order-choices="orderChoices"
                 :value="filter.orderBy"                    
                 @change="val => onParamChange({orderBy: val})"
-            ></order-select>           
+            />           
         </el-form-item>
 
         <el-form-item label="Nombre">
@@ -51,7 +51,7 @@
 
 <script>
 
-import OrderSelect from '../blocks/OrderSelect';
+import AbOrderSelect from '../blocks/AbOrderSelect';
 import QuerySelect from '../blocks/QuerySelect';
 import { schemasFilter as filter } from '../../store/item-schemas/models';
 
@@ -66,7 +66,7 @@ export default {
     name: 'SchemasFilter',
 
     components: {
-        OrderSelect,
+        AbOrderSelect,
         QuerySelect
     },
 

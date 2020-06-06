@@ -1,14 +1,14 @@
 <template>
 
-<split-view v-if="schema" class="items-index">
+<ab-split-view v-if="schema" class="items-index">
     <template v-slot:main>
-        <list-header 
+        <ab-list-header 
             class="mb-4"
             :show-count="items.length"
             :total-count="itemsCount"
             add-text="Nuevo Objeto"
             @create="onCreateItem"
-        ></list-header>
+        />
 
         <div 
             v-if="booting" 
@@ -24,29 +24,13 @@
             @update:focus-id="onItemListChange"
         ></items-list-wrapper>
 
-        <el-dialog
-            title="Advertencia"
+        <ab-delete-dialog
+            message="Por favor confirme que eliminar esta objeto de forma 
+                permanente. Se eliminará cualquier dato asociado."
             :visible.sync="showDeleteDialog"
-            width="400px"
-            center
-        >
-            <p>
-                ¿Seguro deseas eliminar este objeto de forma permanente? 
-                Se eliminará cualquier dato asociado.
-            </p>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="showDeleteDialog = false">
-                    Cancelar
-                </el-button>
-                <el-button 
-                    type="primary" 
-                    :disabled="loading"
-                    @click="onConfirmDelete"
-                >
-                    Confirmar
-                </el-button>
-            </span>
-        </el-dialog>
+            :disabled="loading"
+            @confirm="onConfirmDelete"
+        />
 
         <el-dialog
             v-if="!booting"
@@ -82,54 +66,64 @@
         <template v-if="panel === 'search'">
             <div class="text-lg text-w6">Búsqueda</div>
             <div class="flex-row">
-                <tool-button
+                <ab-tool-button
                     class="ml-1"
                     tooltip="Seleccionar columnas" 
                     icon="el-icon-tickets"
                     @click="showHeadersDialog = true"
-                ></tool-button>
-                <tool-button
+                />
+                <ab-tool-button
                     class="ml-1"
                     tooltip="Restablecer filtro" 
                     icon="el-icon-refresh"
                     @click="onClearFilterClick"
-                ></tool-button>
+                />
             </div>            
         </template>
 
         <template v-else-if="panel === 'details'">
-            <div class="text-lg text-w6">Detalles</div>
+            <div class="flex-row ac">
+                <el-button 
+                    type="text" 
+                    icon="el-icon-back" 
+                    class="mr-2 back"
+                    @click="onCloseItemDetails"
+                />
+                <div class="text-lg text-w6">Detalles</div>
+            </div>            
             <div class="flex-row">
-                <tool-button
+                <ab-tool-button
                     class="ml-1"
                     tooltip="Editar objeto" 
                     icon="el-icon-edit"
                     @click="onOpenItemEditor"
-                ></tool-button>
-                <tool-button
+                />
+                <ab-tool-button
                     class="ml-1"
                     tooltip="Eliminar objeto" 
                     icon="el-icon-delete"
                     @click="showDeleteDialog = true"
-                ></tool-button>
+                />
             </div>                    
         </template>
 
         <template v-else-if="panel === 'editor'">
-            <div class="text-lg text-w6">Editor</div>
-            <div class="flex-row">
-                <tool-button
-                    class="mx-1"
+            <div class="flex-row ac">
+                <el-button 
+                    type="text" 
+                    icon="el-icon-back" 
+                    class="mr-2 back"
+                    @click="onCloseItemEditor"
+                />
+                <div class="text-lg text-w6">Editar Objeto</div>
+            </div> 
+            
+            <div v-if="!autoSave" class="flex-row">
+                <ab-tool-button
                     tooltip="Guardar cambios" 
                     icon="el-icon-check"
                     @click="onConfirmItemEdit"
-                ></tool-button>
-                <tool-button
-                    class="mx-1"
-                    tooltip="Cerrar edición" 
-                    icon="el-icon-close"
-                    @click="onCloseItemEditor"
-                ></tool-button>
+                />
             </div>                    
         </template>
     </template>
@@ -150,7 +144,7 @@
             :item-id="curItemId"
         ></item-editor>
     </template>
-</split-view>
+</ab-split-view>
 
 </template>
 
@@ -158,28 +152,27 @@
 import { mapGetters } from 'vuex';
 
 import { itemModel } from '../../store/items/models';
-import SplitView from '../blocks/SplitView';
-import ToolButton from '../blocks/ToolButton';
-import ListHeader from '../blocks/ListHeader';
+import AbSplitView from '../blocks/AbSplitView';
+import AbToolButton from '../blocks/AbToolButton';
+import AbListHeader from '../blocks/AbListHeader';
+import AbDeleteDialog from '../blocks/AbDeleteDialog';
 import ItemsListWrapper from './ItemsListWrapper';
-/* import ItemDetails from './ItemDetails'; */
+/* ItemDetails from './ItemDetails'; */
 import ItemsFilter from './ItemsFilter';
 import ItemEditor from './ItemEditor';
 import params from '../../params';
-
-const nColumnsShow = 4;
-
 import { loadSchema } from '../loader';
 
-const newItemId = 'newId';
+const nColumnsShow = 4;
 
 export default {
     name: 'ItemsIndex',
 
     components: {
-        SplitView,
-        ToolButton,
-        ListHeader,
+        AbSplitView,
+        AbToolButton,
+        AbListHeader,
+        AbDeleteDialog,
         ItemsListWrapper,
         ItemsFilter,
         /* ItemDetails, */
@@ -195,14 +188,14 @@ export default {
 
     data() {
         return {
-            newItemId: newItemId,
             panel: 'search',
             curItemId: null,
             showDeleteDialog: false,
             showHeadersDialog: false,
             showKeys: [],
             loading: false,
-            booting: false
+            booting: false,
+            autoSave: true
         };
     },
 
@@ -246,22 +239,27 @@ export default {
             });
 
             return Array.from(headers).sort(
-                (fa, fb) => (fa.order > fb.order) ? 1 : -1
+                (fa, fb) => (fa.order < fb.order) ? 1 : -1
             );
         }
     },
 
-    created() {
-        this.$store.dispatch('schemas/items/fetchItems', {
-            'schema_id': this.schemaId
-        });
+    created() {        
         this.booting = true;
         loadSchema(this.$store, this.schemaId).then(() => {
-            this.booting = false;
+            this.fetchItems().then(() => {
+                this.booting = false;
+            });            
         });
     },
 
     methods: {
+
+        fetchItems() {
+            return this.$store.dispatch('schemas/items/fetchItems', {
+                'schema_id': this.schemaId
+            });
+        },
 
         onItemListChange(itemId) {            
             this.panel = itemId === null ? 'search' : 'details';
@@ -282,52 +280,54 @@ export default {
         onCreateItem() {
             const item = itemModel.create();
             item.schema = this.schemaId;
-
             this.$store.dispatch('schemas/items/createItem', {
                 item: item,
                 persist: true
             }).then(({ id }) => {
-                this.curItemId = id;
-                this.panel = 'editor';
+                this.fetchItems().then(() => {
+                    this.curItemId = id;
+                    this.panel = 'editor';
+                });
             });          
         },
 
         onConfirmItemEdit() {
-            if (this.panel === 'editor' && this.curItem !== null) {
-                const state = this.$store.state.schemas;
-                Object.keys(params).forEach(key => {
-                    const store = params[key].valueStore;
-                    this.curItem[store].forEach(valueId => {
-                        const value = state[store].items[valueId];
-                        if (value) {
-                            this.$store.dispatch(`schemas/${store}/updateItem`, {
-                                persist: true,
-                                item: {id: value, ...value}
-                            });
-                        }
-                    });
-                });               
-            }            
+            this.panel = 'details';
+            const state = this.$store.state.schemas;
+            Object.keys(params).forEach(key => {
+                const store = params[key].valueStore;
+                this.curItem[store].forEach(valueId => {
+                    const value = state[store].items[valueId];
+                    if (value) {
+                        this.$store.dispatch(`schemas/${store}/updateItem`, {
+                            persist: true,
+                            item: {id: value, ...value}
+                        });
+                    }
+                });
+            });          
         },
 
         onCloseItemEditor() {
-            if (this.panel === 'editor' && this.curItemId !== null) {
-                this.curItemId = null;
-                this.panel = 'search';
-            }
+            this.panel = 'details';
+        },
+
+        onCloseItemDetails() {
+            this.panel = 'search';
+            this.curItemId = null;
         },
 
         onConfirmDelete() {
             if (this.curItemId !== null && this.panel === 'details') {
                 this.loading = true;
                 this.$store.dispatch(
-                    'items/destroyItem', this.curItemId
+                    'schemas/items/destroyItem', this.curItemId
                 ).then(() => {
                     this.loading = false;
-                    this.curItemId = null;
                     this.panel = 'search';
+                    this.curItemId = null;                    
                     this.showDeleteDialog = false;
-                    this.$store.dispatch('schemas/items/fetchItems');
+                    this.fetchItems();
                 });
             }
         }

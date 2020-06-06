@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="84c0f858-d56a-4274-9325-c50076378277" name="Default Changelist" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ProjectId" id="1cBx9sMighpHBAfZ08n5ILE4pHW" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/components/blocks" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/components/blocks" />
+    </key>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="2" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="640" y="284" width="630" height="553" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog" timestamp="1591384952554">
+      <screen x="0" y="34" width="1920" height="1046" />
+    </state>
+    <state x="640" y="284" width="630" height="553" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/0.34.1920.1046@0.34.1920.1046" timestamp="1591384952554" />
+    <state x="690" y="240" width="530" height="640" key="FileChooserDialogImpl" timestamp="1590030288417">
+      <screen x="0" y="34" width="1920" height="1046" />
+    </state>
+    <state x="690" y="240" width="530" height="640" key="FileChooserDialogImpl/0.34.1920.1046@0.34.1920.1046" timestamp="1590030288417" />
+    <state x="486" y="249" width="937" height="622" key="NewModule_or_Project.wizard" timestamp="1590030266590">
+      <screen x="0" y="34" width="1920" height="1046" />
+    </state>
+    <state x="486" y="249" width="937" height="622" key="NewModule_or_Project.wizard/0.34.1920.1046@0.34.1920.1046" timestamp="1590030266590" />
+    <state x="332" y="104" width="1256" height="912" key="SettingsEditor" timestamp="1590075861996">
+      <screen x="0" y="34" width="1920" height="1046" />
+    </state>
+    <state x="332" y="104" width="1256" height="912" key="SettingsEditor/0.34.1920.1046@0.34.1920.1046" timestamp="1590075861996" />
+    <state x="100" y="134" width="1720" height="846" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1590165752167">
+      <screen x="0" y="34" width="1920" height="1046" />
+    </state>
+    <state x="100" y="134" width="1720" height="846" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.34.1920.1046@0.34.1920.1046" timestamp="1590165752167" />
+    <state x="593" y="240" width="734" height="706" key="find.popup" timestamp="1591313700761">
+      <screen x="0" y="34" width="1920" height="1046" />
+    </state>
+    <state x="593" y="240" width="734" height="706" key="find.popup/0.34.1920.1046@0.34.1920.1046" timestamp="1591313700761" />
+    <state x="605" y="194" width="700" height="732" key="new project wizard" timestamp="1590030242831">
+      <screen x="0" y="34" width="1920" height="1046" />
+    </state>
+    <state x="605" y="194" width="700" height="732" key="new project wizard/0.34.1920.1046@0.34.1920.1046" timestamp="1590030242831" />
+  </component>
+</project>

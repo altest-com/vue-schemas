@@ -1,5 +1,5 @@
-
 import config from './config';
+import './styles/index.scss'; // global css
 
 const install = (Vue, options = {}) => {
     Object.assign(config, options);

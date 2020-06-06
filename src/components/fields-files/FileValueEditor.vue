@@ -2,12 +2,12 @@
 
 <div v-if="value && field" class="file-value-editor">  
     <el-form-item :label="label"> 
-        <file-uploader
+        <ab-file-uploader
             store="schemas/files"
             :multiple="field.multi"
             :value="value.value"                    
             @input="val => onParamChange({value: val})"
-        ></file-uploader>
+        />
     </el-form-item>
 </div>
 
@@ -16,13 +16,13 @@
 <script>
 
 import ValueEditorMixin from '../fields/ValueEditorMixin';
-import FileUploader from '../blocks/FileUploader';
+import AbFileUploader from '../blocks/AbFileUploader';
 
 export default {
     name: 'FileValueEditor',
 
     components: {
-        FileUploader
+        AbFileUploader
     },
 
     mixins: [ValueEditorMixin],

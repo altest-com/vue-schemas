@@ -13,14 +13,16 @@
             size="small"
         >
             <el-form-item label="Imagen por defecto">
-                <image-uploader
+                <ab-image-uploader
                     store="schemas/images"
-                    :multiple="field.multi"
+                    :multiple="true"
+                    :upload-url="uploadUrl"
+                    :upload-headers="uploadHeaders"
                     button="block"
                     display="labels"
                     :value="field.default"                    
                     @input="val => onParamChange({default: val})"
-                ></image-uploader>
+                />
             </el-form-item>
 
             <el-form-item label="Múltiples imágenes" class="switch">
@@ -73,7 +75,8 @@
 <script>
 
 import { imageConfigModel as config } from '../../store/images-fields/models';
-import ImageUploader from '../blocks/ImageUploader';
+import { imagesApi } from '../../store/images';
+import AbImageUploader from '../blocks/AbImageUploader';
 import FieldEditor from '../fields/FieldEditor';
 import FieldEditorMixin from '../fields/FieldEditorMixin';
 
@@ -95,7 +98,7 @@ export default {
     name: 'ImageFieldEditor',
 
     components: {
-        ImageUploader,
+        AbImageUploader,
         FieldEditor
     },
 
@@ -105,7 +108,9 @@ export default {
         return {
             fieldStore: 'imagesFields',
             displayChoices: displayChoices,
-            buttonChoices: buttonChoices
+            buttonChoices: buttonChoices,
+            uploadUrl: imagesApi.getUrl(),
+            uploadHeaders: imagesApi.getHeader(),
         };
     }
 };

@@ -13,7 +13,7 @@
                     :value="schema.name"                    
                     @input="val => onParamChange({name: val})"
                     @change="updateRoutes"                  
-                ></el-input>
+                />
             </el-form-item>
 
             <el-form-item label="Categoría">
@@ -24,20 +24,20 @@
                     @change="val => onParamChange({
                         category: val.length ? val[0] : null
                     })"
-                ></query-select>
+                />
             </el-form-item>
 
             <el-form-item label="Imagen">
-                <image-uploader
+                <ab-image-uploader
                     store="schemas/images"
                     :multiple="false"
+                    :upload-url="uploadUrl"
+                    :upload-headers="uploadHeaders"
                     button="block"
                     display="labels"
-                    :value="schemaImage"
-                    @input="val => onParamChange({
-                        image: val.length ? val[0] : null
-                    })"
-                ></image-uploader>
+                    :value="schema.image"
+                    @input="val => onParamChange({image: val})"
+                />
             </el-form-item>
         </el-form>
     </el-tab-pane>
@@ -85,10 +85,11 @@
 <script>
 
 import QuerySelect from '../blocks/QuerySelect';
-import ImageUploader from '../blocks/ImageUploader';
+import AbImageUploader from '../blocks/AbImageUploader';
 import SchemaSections from './SchemaSections';
 import config from '../../config';
 import { configModel } from '../../store/item-schemas/models';
+import { imagesApi } from "../../store/images";
 
 const printLayouts = Object.keys(
     configModel.PRINT_LAYOUT_CHOICES
@@ -109,7 +110,7 @@ export default {
 
     components: {
         QuerySelect,
-        ImageUploader,
+        AbImageUploader,
         SchemaSections
     },
 
@@ -124,7 +125,9 @@ export default {
         return {
             editorTab: 'schema',
             printLayouts: printLayouts,
-            printLabels: printLabels
+            printLabels: printLabels,
+            uploadUrl: imagesApi.getUrl(),
+            uploadHeaders: imagesApi.getHeader(),
         };
     },
 
@@ -132,11 +135,6 @@ export default {
         schema() {
             const state = this.$store.state.schemas;
             return state.itemSchemas.items[this.schemaId];
-        },
-
-        schemaImage() {
-            const image = this.schema.image;
-            return image || image === 0 ? [image] : []; 
         }
     },
 

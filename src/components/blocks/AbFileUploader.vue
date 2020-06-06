@@ -1,6 +1,6 @@
 <template>
 
-<div class="file-uploader">
+<div class="ab-file-uploader">
     <div v-if="files.length" class="file-list">
         <div 
             v-for="file in files" 
@@ -14,7 +14,7 @@
                 icon="el-icon-close" 
                 size="small"
                 @click="onRemoveFile(file.id)"
-            ></el-button>
+            />
         </div>
     </div>
 
@@ -135,7 +135,7 @@ export default {
 
         onFileUploadOnError(error, file, fileList) {
             this.loading = false;
-            this.$log(error);
+            console.error(error);
         },
 
         onRemoveFile(fileId) {
@@ -159,7 +159,7 @@ export default {
 
 <style lang="scss">
 
-.file-uploader {
+.ab-file-uploader {
     .el-upload {
         margin: 0;
     }

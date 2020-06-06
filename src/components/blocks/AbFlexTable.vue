@@ -33,7 +33,6 @@ export default {
         word-break: break-all;
         vertical-align: middle;
         position: relative;
-        text-align: left;
         line-height: 23px;
     }
     td {

@@ -214,7 +214,7 @@ export default {
                         return this.buildChoice(choice);
                     });
                 }).catch(error => {
-                    this.$log.error(error);                   
+                    console.error.error(error);
                 }).finally(() => {
                     this.querying = false;
                 });                

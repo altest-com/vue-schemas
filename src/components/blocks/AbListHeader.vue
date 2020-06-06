@@ -1,6 +1,6 @@
 <template>
 
-<div class="list-header">        
+<div class="ab-list-header">        
     <div class="info-count">
         Mostrando {{ showCount }} de {{ totalCount }} resultados
     </div>
@@ -20,7 +20,7 @@
 <script>
 
 export default {
-    name: 'ListHeader',
+    name: 'AbListHeader',
 
     props: {
         showCount: {
@@ -53,7 +53,7 @@ export default {
 
 <style lang="scss">
 
-.list-header {
+.ab-list-header {
     display: flex;
     flex-flow: row nowrap;
     justify-content: space-between;

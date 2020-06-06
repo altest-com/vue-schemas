@@ -99,7 +99,7 @@ export default {
         cursor: pointer;
     }
     &.focus .el-card {
-        box-shadow: 0 2px 12px 0 rgba(0,0,0,0.1);
+        box-shadow: 0 2px 16px 0 rgba(0, 0, 0, 0.34);
     }
     .content {
         display: flex;

@@ -1,18 +1,16 @@
 <template>
 
-<div class="image-uploader">
+<div class="ab-image-uploader">
 
     <template v-if="display === 'carousel'">
-        <empty
+        <ab-empty
             v-if="images.length === 0"
             v-loading="loading"
             title="Imagen"
-            message=""
             icon-size="3em"
             :height="height"
             icon="el-icon-camera-solid"
-            background="#eee"
-        ></empty>
+        />
         
         <el-carousel 
             v-else-if="multiple"
@@ -23,7 +21,7 @@
                 v-for="image in images"
                 :key="image.id"
             >
-                <image-overlay 
+                <ab-image-overlay 
                     :image="image.url" 
                     :height="height"
                     width="100%"
@@ -47,11 +45,11 @@
                             Ampliar
                         </el-button>
                     </div>
-                </image-overlay>
+                </ab-image-overlay>
             </el-carousel-item>
         </el-carousel>
 
-        <image-overlay
+        <ab-image-overlay
             v-else
             :image="images[0].url" 
             :height="height"
@@ -76,7 +74,7 @@
                     Ampliar
                 </el-button>
             </div>
-        </image-overlay>
+        </ab-image-overlay>
     </template>
 
     <template v-else-if="display === 'labels'">
@@ -94,7 +92,7 @@
                     icon="el-icon-close" 
                     size="small"
                     @click="onRemoveImage(image.id)"
-                ></el-button>
+                />
             </div>            
         </div>
     </template>    
@@ -105,9 +103,9 @@
         :class="{'has-labels': display === 'labels'}"
         :drag="button === 'drag'"
         :multiple="multiple"
-        :name="imageUploadName"
-        :action="imageUploadUrl"
-        :headers="imageUploadHeader"
+        :name="uploadName"
+        :action="uploadUrl"
+        :headers="uploadHeaders"
         :before-upload="onBeforeUploadImage"
         :on-success="onSuccessImageUpload"
         :on-error="onImageUploadOnError"
@@ -141,16 +139,15 @@
 
 <script>
 
-import Empty from './Empty';
-import ImageOverlay from './ImageOverlay';
-import { imagesApi } from '../../store/images';
+import AbEmpty from './AbEmpty';
+import AbImageOverlay from './AbImageOverlay';
 
 export default {
-    name: 'ImageUploader',
+    name: 'AbImageUploader',
 
     components: {
-        Empty,
-        ImageOverlay
+        AbEmpty,
+        AbImageOverlay
     },
     
     props: {
@@ -158,15 +155,27 @@ export default {
             type: String,
             required: true
         },
-        value: {
-            type: Array,
-            default: () => []
+        uploadUrl: {
+            type: String,
+            required: true
         },
-        disabled: {
+        uploadHeaders: {
+            type: Object,
+            required: true
+        },
+        multiple: {
             type: Boolean,
             default: false
         },
-        multiple: {
+        uploadName: {
+            type: String,
+            default: 'image'
+        },
+        value: {
+            type: null,
+            default: null
+        },
+        disabled: {
             type: Boolean,
             default: false
         },
@@ -194,9 +203,6 @@ export default {
 
     data() {
         return {
-            imageUploadName: 'image',
-            imageUploadUrl: imagesApi.getUrl(),
-            imageUploadHeader: imagesApi.getHeader(),            
             loading: false,
             alertMessage: null,
             showImage: '',
@@ -214,8 +220,11 @@ export default {
         },
         images() {
             const images = [];
-            this.value.forEach(imageId => {
-                if (imageId || imageId === 0) {
+            const value = this.multiple ? this.value : (
+                this.value ? [this.value] : []
+            );
+            value.forEach(imageId => {
+                if (imageId) {
                     this.$store.dispatch(`${this.store}/getItem`, imageId);
                     const image = this.state.items[imageId];
                     if (image) {
@@ -254,7 +263,7 @@ export default {
             if (this.multiple) {
                 this.$emit('input', [...this.value, response.id]); 
             } else {
-                this.$emit('input', [response.id]);   
+                this.$emit('input', response.id);
             }                               
         },
 
@@ -264,7 +273,7 @@ export default {
                 type: 'error',
                 text: 'Ha ocurrido un error y no se ha podido cargar la imagen.' 
             };
-            this.$log(error);
+            console.error(error);
         },
 
         onRemoveImage(imageId) {
@@ -278,7 +287,7 @@ export default {
                         val => val !== imageId
                     )); 
                 } else {
-                    this.$emit('input', []); 
+                    this.$emit('input', null);
                 }
             });
         },
@@ -293,8 +302,8 @@ export default {
 
 <style lang="scss">
 
-.image-uploader {
-    .image-overlay img {
+.ab-image-uploader {
+    .ab-image-overlay img {
         height: 100%;
         width: 100%;
         background-color: #000000;

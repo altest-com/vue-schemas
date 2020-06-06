@@ -2,15 +2,17 @@
 
 <div v-if="value && field" class="images-value-editor">
     <el-form-item :label="label"> 
-        <image-uploader
+        <ab-image-uploader
             store="schemas/images"
-            :multiple="field.multi"
+            :multiple="true"
+            :upload-url="uploadUrl"
+            :upload-headers="uploadHeaders"
             :height="field.config.height"
             :button="field.config.buttonType"
             :display="field.config.displayAs"
             :value="value.value"
             @input="val => onParamChange({value: val})"
-        ></image-uploader>
+        />
     </el-form-item>
 </div>
 
@@ -18,14 +20,15 @@
 
 <script>
 
-import ImageUploader from '../blocks/ImageUploader';
+import AbImageUploader from '../blocks/AbImageUploader';
 import ValueEditorMixin from '../fields/ValueEditorMixin';
+import { imagesApi } from "../../store/images";
 
 export default {
     name: 'ImagesValueEditor',
 
     components: {
-        ImageUploader
+        AbImageUploader
     },
 
     mixins: [ValueEditorMixin],
@@ -33,7 +36,9 @@ export default {
     data() {
         return {
             fieldStore: 'imagesFields',
-            valueStore: 'imagesValues'
+            valueStore: 'imagesValues',
+            uploadUrl: imagesApi.getUrl(),
+            uploadHeaders: imagesApi.getHeader(),
         };
     }
 };

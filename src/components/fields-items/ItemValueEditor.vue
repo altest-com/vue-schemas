@@ -52,16 +52,14 @@
                     ></item-editor>
                 </template>
             </template>
-            <empty
+            <ab-empty
                 v-else
                 :title="field.name"
                 message="Aún no se han añadido ningún elemento"
                 icon-size="2.5em"
                 height="200px"
-                icon="el-icon-warning-outline"
-                background="#eee"
                 class="mb-3"
-            ></empty>            
+            />            
         </template>
         <template v-else>
             <item-editor
@@ -80,14 +78,14 @@
 import ItemQuery from './ItemQuery';
 import ValueEditorMixin from '../fields/ValueEditorMixin';
 import AbStepViews from '../blocks/AbStepViews';
-import Empty from '../blocks/Empty';
+import AbEmpty from '../blocks/AbEmpty';
 
 export default {
     name: 'ItemValueEditor',
 
     components: {
         ItemQuery,
-        Empty,
+        AbEmpty,
         AbStepViews,
         ItemEditor: () => import('../items/ItemEditor')
     },

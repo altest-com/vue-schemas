@@ -1,10 +1,10 @@
 <template>
 
-<split-view class="item-schema-editor">
+<ab-split-view class="item-schema-editor">
     <template v-slot:main>
         <div class="flex-row jb ac mx-3 mb-3">
-            <h2  v-if="!booting" class="text-lg mb-0">
-                {{ itemSchema.name }}
+            <h2 class="text-lg mb-0">
+                <span v-if="!booting">{{ itemSchema.name }}</span>
             </h2>
             <el-button 
                 type="primary" 
@@ -31,32 +31,13 @@
             ></schema-fields-view>
         </el-card>
 
-        <el-dialog
-            title="Advertencia"
+        <ab-delete-dialog
+            message="Por favor confirme que eliminar esta esquema de forma 
+                permanente. Se eliminará cualquier dato asociado."
             :visible.sync="showDeleteDialog"
-            width="400px"
-        >
-            <p class="mb-0">
-                ¿Seguro deseas eliminar esta esquema de forma permanente? 
-                Se eliminará cualquier objecto asociado.
-            </p>
-            <span slot="footer" class="dialog-footer">
-                <el-button 
-                    icon="el-icon-close"
-                    size="small"
-                    class="mr-2"
-                    @click="showDeleteDialog = false"
-                >
-                    Cancelar
-                </el-button>
-                <el-button 
-                    type="danger" 
-                    icon="el-icon-delete" 
-                    size="small"
-                    @click="onDeleteSchema"
-                >Confirmar</el-button>
-            </span>
-        </el-dialog>
+            :disabled="loading"
+            @confirm="onDeleteSchema"
+        />
 
         <el-dialog
             title="Clonar esquema"
@@ -98,19 +79,19 @@
         <template v-if="panel === 'schema'">
             <div class="text-lg text-w6">Editar Esquema</div>
             <div class="flex-row">
-                <tool-button
+                <ab-tool-button
                     tooltip="Clonar esquema"
                     :disabled="cloningSchema" 
                     :icon="cloningSchema ? 
                         'el-icon-loading' : 'el-icon-copy-document'"
                     @click="onRequestCloneSchema"
-                ></tool-button>
-                <tool-button
+                />
+                <ab-tool-button
                     tooltip="Eliminar esquema" 
                     icon="el-icon-delete"
                     class="ml-1"
                     @click="showDeleteDialog = true"
-                ></tool-button>
+                />
             </div>            
         </template>
         <template v-if="panel === 'field'">
@@ -120,24 +101,24 @@
                     icon="el-icon-back" 
                     class="mr-2 back"
                     @click="onCloseFieldEditor"
-                ></el-button>
+                />
                 <div class="text-lg text-w6">Editar Campo</div>
             </div>
             
             <div class="flex-row">
-                <tool-button
+                <ab-tool-button
                     tooltip="Clonar campo"
                     :disabled="cloningField" 
                     :icon="cloningField ? 
                         'el-icon-loading' : 'el-icon-copy-document'"
                     @click="onCloneField"
-                ></tool-button>
-                <tool-button
+                />
+                <ab-tool-button
                     class="ml-1"
                     tooltip="Eliminar campo" 
                     icon="el-icon-delete"
                     @click="onDeleteField"
-                ></tool-button>                
+                />                
             </div>
         </template>
     </template>
@@ -169,14 +150,15 @@
             ></component>
         </template>
     </template>
-</split-view>
+</ab-split-view>
 
 </template>
 
 <script>
 
-import ToolButton from '../blocks/ToolButton';
-import SplitView from '../blocks/SplitView';
+import AbToolButton from '../blocks/AbToolButton';
+import AbSplitView from '../blocks/AbSplitView';
+import AbDeleteDialog from '../blocks/AbDeleteDialog';
 import BooleanFieldEditor from '../fields-booleans/BooleanFieldEditor';
 import ChoicesFieldEditor from '../fields-choices/ChoicesFieldEditor';
 import DatetimeFieldEditor from '../fields-dates/DatetimeFieldEditor';
@@ -198,8 +180,9 @@ export default {
     name: 'SchemaEditor',
 
     components: {
-        ToolButton,
-        SplitView,
+        AbToolButton,
+        AbSplitView,
+        AbDeleteDialog,
         BooleanFieldEditor,
         ChoicesFieldEditor,
         DatetimeFieldEditor,
@@ -339,7 +322,7 @@ export default {
                     );
                 });
             } else {
-                this.$log.error(`Invalid field type ${fieldType}`);
+                console.error.error(`Invalid field type ${fieldType}`);
             }
         },
 
@@ -533,21 +516,6 @@ export default {
     }
     .field-views-list {
         max-width: 500px;
-    }
-    .el-button.back 
-    {
-        padding: 0;
-        i {
-            margin-top: 3px;
-            font-weight: 700;
-            font-size: 18px;
-            color: #606266;
-        }
-        &:hover, &:active {
-            i {
-                color: #409eff; 
-            }
-        }
     }
 }
 

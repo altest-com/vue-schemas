@@ -1,30 +1,34 @@
 <template>
     <div 
-        class="empty p-3" 
+        class="ab-empty p-3" 
         :style="{height: height, color: color, backgroundColor: background}"
     >
         <i 
             v-if="icon"
             :class="icon"
             :style="{fontSize: iconSize, marginBottom: iconMargin}"
-        ></i>
+        />
         <div
             v-if="title" 
             class="title mb-1" 
             :style="{fontSize: titleSize}"
-        >{{ title }}</div>     
+        >
+            {{ title }}
+        </div>
         <div
             v-if="message" 
             class="message" 
             :style="{fontSize: messageSize}"
-        >{{ message }}</div>     
+        >
+            {{ message }}
+        </div>
     </div>
 </template>
 
 <script>
 
 export default {
-    name: 'Empty',
+    name: 'AbEmpty',
 
     props: {
         title: {
@@ -37,11 +41,11 @@ export default {
         },
         icon: {
             type: String,
-            default: 'el-icon-folder-opened'
+            default: 'el-icon-warning-outline'
         },
         iconSize: {
             type: String,
-            default: '5em'
+            default: '3em'
         },
         iconMargin: {
             type: String,
@@ -61,18 +65,18 @@ export default {
         },
         color: {
             type: String,
-            default: '#aaaaaa'
+            default: '#aaa'
         },
         background: {
             type: String,
-            default: '#eeeeee'
+            default: '#eee'
         }
     }
 };
 </script>
 
 <style lang="scss">
-    .empty {
+    .ab-empty {
         background: #eeeeee;
         display: flex;
         flex-flow: column nowrap;

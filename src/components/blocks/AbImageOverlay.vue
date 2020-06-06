@@ -1,6 +1,6 @@
 <template>
     <div 
-        class="image-overlay" 
+        class="ab-image-overlay" 
         :style="{width: width, height: height}"
         :class="{'always-show': alwaysShow}"
     >
@@ -16,7 +16,7 @@
 <script>
 
 export default {
-    name: 'ImageOverlay',
+    name: 'AbImageOverlay',
 
     props: {
         image: {
@@ -45,7 +45,7 @@ export default {
 
 <style lang="scss">
 
-.image-overlay {
+.ab-image-overlay {
     position: relative;
     height: 100%;
 

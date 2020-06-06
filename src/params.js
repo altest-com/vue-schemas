@@ -2,18 +2,18 @@ import { booleanFieldModel } from './store/boolean-fields/models';
 import { choicesFieldModel } from './store/choices-fields/models';
 import { dateTimeFieldModel } from './store/datetime-fields/models';
 import { fileFieldModel } from './store/file-fields/models';
-import { imagesFieldModel } from './store/images-fields/models';
-import { itemFieldModel } from './store/item-fields/models';
-import { numberFieldModel } from './store/number-fields/models';
-import { textFieldModel } from './store/text-fields/models';
-import { booleanValueModel } from './store/boolean-values/models';
-import { choicesValueModel } from './store/choices-values/models';
-import { dateTimeValueModel } from './store/datetime-values/models';
-import { fileValueModel } from './store/file-values/models';
-import { imagesValueModel } from './store/images-values/models';
-import { itemValueModel } from './store/item-values/models';
-import { numberValueModel } from './store/number-values/models';
-import { textValueModel } from './store/text-values/models';
+import {imagesFieldModel } from './store/images-fields/models';
+import {itemFieldModel } from './store/item-fields/models';
+import {numberFieldModel } from './store/number-fields/models';
+import {textFieldModel } from './store/text-fields/models';
+import {booleanValueModel } from './store/boolean-values/models';
+import {choicesValueModel } from './store/choices-values/models';
+import {dateTimeValueModel } from './store/datetime-values/models';
+import {fileValueModel } from './store/file-values/models';
+import {imagesValueModel } from './store/images-values/models';
+import {itemValueModel } from './store/item-values/models';
+import {numberValueModel } from './store/number-values/models';
+import {textValueModel } from './store/text-values/models';
 
 export default {
     boolean: {

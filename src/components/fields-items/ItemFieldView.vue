@@ -29,15 +29,13 @@
                     Eliminar {{ field.name }}
                 </el-button>
             </div>
-            <empty
+            <ab-empty
                 :title="field.name"
                 message="Aún no se han añadido ningún elemento"
                 icon-size="2.5em"
                 height="200px"
-                icon="el-icon-warning-outline"
-                background="#eee"
                 class="mb-3"
-            ></empty>
+            />
         </template>
         <item-schema-view v-else :schema-id="field.targetSchema">
         </item-schema-view>
@@ -48,7 +46,7 @@
 
 <script>
 
-import Empty from '../blocks/Empty';
+import AbEmpty from '../blocks/AbEmpty';
 import FieldViewMixin from '../fields/FieldViewMixin';
 import ItemQuery from './ItemQuery';
 
@@ -57,7 +55,7 @@ export default {
 
     components: {
         ItemQuery,
-        Empty,
+        AbEmpty,
         ItemSchemaView: () => import('../items/ItemSchemaView')
     },
 

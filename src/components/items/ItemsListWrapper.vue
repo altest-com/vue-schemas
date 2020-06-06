@@ -19,15 +19,13 @@
         </ab-flex-table>
     </el-card>
 
-    <empty
+    <ab-empty
         v-else
         title="Sin elementos"
         message="No existen resultados para mostrar"
         icon-size="3em"
         height="383px"
-        icon="el-icon-warning-outline"
-        background="#eee"
-    ></empty> 
+    /> 
 
     <el-pagination 
         hide-on-single-page
@@ -46,7 +44,7 @@
 <script>
 
 import { mapGetters } from 'vuex';
-import Empty from '../blocks/Empty';
+import AbEmpty from '../blocks/AbEmpty';
 import AbFlexTable from '../blocks/AbFlexTable';
 import ItemsTableRow from './ItemsTableRow';
 
@@ -54,7 +52,7 @@ export default {
     name: 'ItemsListWrapper',
 
     components: {
-        Empty,
+        AbEmpty,
         ItemsTableRow,
         AbFlexTable
     },

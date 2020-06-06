@@ -41,13 +41,6 @@
                 ></el-date-picker>
             </el-form-item>
 
-            <el-form-item label="Representar relación" class="switch">
-                <el-switch
-                    :value="field.represent"                    
-                    @change="val => onParamChange({represent: val})"
-                ></el-switch>
-            </el-form-item>
-
             <div class="flex-row js">
 
                 <el-form-item label="Valor mínimo" class="mr-2">

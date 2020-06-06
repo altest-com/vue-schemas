@@ -1,6 +1,6 @@
 <template>
 
-<div class="order-select">
+<div class="ab-order-select">
     <div class="flex-row">
         <el-select
             :value="orderBy"
@@ -11,7 +11,7 @@
                 :key="choice.value"
                 :label="choice.label"
                 :value="choice.value"
-            ></el-option>
+            />
         </el-select>
         <el-button
             :icon="orderDirIcon"
@@ -19,7 +19,7 @@
             class="ml-1"
             size="small"
             @click="onInvertDir"
-        ></el-button>
+        />
     </div>
 </div>
 
@@ -28,7 +28,7 @@
 <script>
 
 export default {
-    name: 'OrderSelect',
+    name: 'AbOrderSelect',
 
     props: {
         orderChoices: {
@@ -71,6 +71,3 @@ export default {
     }
 };
 </script>
-
-<style lang="scss">
-</style>

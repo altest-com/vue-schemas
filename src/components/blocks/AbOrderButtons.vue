@@ -7,11 +7,11 @@
     <el-button
         :icon="vertical ? 'el-icon-caret-top' : 'el-icon-caret-left'"
         @click="$emit('up')"
-    ></el-button>
+    />
     <el-button
         :icon="vertical ? 'el-icon-caret-bottom' : 'el-icon-caret-right'"
         @click="$emit('down')"
-    ></el-button>
+    />
 </div>
 
 </template>

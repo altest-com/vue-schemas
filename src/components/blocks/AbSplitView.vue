@@ -1,5 +1,5 @@
 <template>
-    <div class="split-view">
+    <div class="ab-split-view">
         <div class="main">
             <el-scrollbar wrap-class="scrollbar-wrapper">
                 <div class="p-3 pr-4">
@@ -24,7 +24,7 @@
 <script>
 
 export default {
-    name: 'SplitView',
+    name: 'AbSplitView',
 
     props: {
         sidePanel: {
@@ -48,7 +48,7 @@ export default {
 
 <style lang="scss">
 
-.split-view {
+.ab-split-view {
     display: flex;
     height: 100%;
 

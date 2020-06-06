@@ -172,7 +172,7 @@ export default {
                         };
                     });
                 }).catch(error => {
-                    this.$log.error(error);                   
+                    console.error.error(error);
                 }).finally(() => {
                     this.querying = false;
                 });                
